@@ -140,6 +140,10 @@ void LocalPlayerController::action(PlayerAction action, int value)
 {
     PlayerController::action(action, value);
 
+    // Register event with history
+    if (!history->replayHistory())
+        history->addEvent(m_kart->getWorldKartId(), action, value);
+
     // If this is a client, send the action to the server
     if (World::getWorld()->isNetworkWorld()      && 
         NetworkConfig::get()->isClient()         &&

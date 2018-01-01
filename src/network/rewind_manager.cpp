@@ -279,6 +279,7 @@ void RewindManager::rewindTo(float rewind_time)
     assert(!m_is_rewinding);
     m_is_rewinding = true;
     Log::info("rewind", "Rewinding to %f", rewind_time);
+    bool is_history = history->replayHistory();
     history->doReplayHistory(History::HISTORY_NONE);
 
     // First find the state to which we need to rewind
@@ -366,6 +367,8 @@ void RewindManager::rewindTo(float rewind_time)
         world->updateTime(dt);
 
     }
+    if(is_history)
+        history->doReplayHistory(History::HISTORY_PHYSICS);
     m_is_rewinding = false;
 
 }   // rewindTo

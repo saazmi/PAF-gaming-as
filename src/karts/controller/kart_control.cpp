@@ -47,23 +47,6 @@ void KartControl::rewind(BareNetworkString *buffer)
 }   // rewind
 
 // ------------------------------------------------------------------------
-/** Sets this KartControl form the given value (basically a copy). This
- *  function uses the explicit setSteer() etc function, which means that
- *  rewind information will be collected.
- */
-void KartControl::set(const KartControl &c)
-{
-    setAccel(c.getAccel());
-    setBrake(c.getBrake());
-    setFire(c.getFire());
-    setLookBack(c.getLookBack());
-    setNitro(c.getNitro());
-    setRescue(c.getRescue());
-    setSkidControl(c.getSkidControl());
-    setSteer(c.getSteer());
-}   // set
-
-// ------------------------------------------------------------------------
 /** Sets the current steering value. */
 void KartControl::setSteer(float f)
 {
