@@ -867,6 +867,17 @@ int handleCmdLinePreliminary()
     else if (CommandLine::has("--disable-hd-textures"))
         UserConfigParams::m_high_definition_textures = 2;
 
+
+    if(CommandLine::has("--nb-views", &s))
+    {
+        int nb_views=0;
+        if (sscanf(s.c_str(), "%d", &nb_views) == 1)
+        {
+            UserConfigParams::m_nb_views = nb_views;
+
+        }
+    }
+
     // Enable loading grand prix from local directory
     if(CommandLine::has("--add-gp-dir", &s))
     {

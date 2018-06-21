@@ -219,6 +219,25 @@ public:
     }   // render
 };   // CombineDiffuseColor
 
+
+// ============================================================================
+class MultiViewShader: public TextureShader<MultiViewShader, 4 >
+{
+public:
+	MultiViewShader()
+    {
+        loadProgram(OBJECT, GL_VERTEX_SHADER, "multiview.vert",
+                            GL_FRAGMENT_SHADER, "multiview.frag");
+/*        assignUniforms("bg_color");
+*/
+        assignSamplerNames(0, "texture2", ST_NEAREST_FILTERED,
+                           1, "texture3", ST_NEAREST_FILTERED,
+                           2, "texture6", ST_NEAREST_FILTERED,
+                           3, "texture7", ST_NEAREST_FILTERED);
+   }
+};   // MultiViewShader
+
+
 // ----------------------------------------------------------------------------
 void ShaderBasedRenderer::renderSceneDeferred(scene::ICameraSceneNode * const camnode,
                                               float dt,
@@ -284,6 +303,7 @@ void ShaderBasedRenderer::renderSceneDeferred(scene::ICameraSceneNode * const ca
         PROFILER_POP_CPU_MARKER();
     }
 
+    ///travail
     // Handle SSAO
     {
         PROFILER_PUSH_CPU_MARKER("- SSAO", 0xFF, 0xFF, 0x00);
@@ -306,6 +326,7 @@ void ShaderBasedRenderer::renderSceneDeferred(scene::ICameraSceneNode * const ca
         PROFILER_POP_CPU_MARKER();
     }
 
+    ///travail
     // Render anything glowing.
     if (UserConfigParams::m_glow)
     {
@@ -330,7 +351,6 @@ void ShaderBasedRenderer::renderSceneDeferred(scene::ICameraSceneNode * const ca
         ScopedGPUTimer Timer(irr_driver->getGPUTimer(Q_COMBINE_DIFFUSE_COLOR));
         glDisable(GL_DEPTH_TEST);
         glDepthMask(GL_FALSE);
-        glDisable(GL_BLEND);
         std::array<float, 4> bg_color = {{ 1.0f, 1.0f, 1.0f, 0.0f }};
         if (World::getWorld() != NULL)
         {
@@ -599,6 +619,10 @@ ShaderBasedRenderer::ShaderBasedRenderer()
     SP::init();
     SP::initSTKRenderer(this);
     m_post_processing = new PostProcessing();
+
+    if (UserConfigParams::m_nb_views) {
+    	fprintf(stderr, "nb views %d!", UserConfigParams::m_nb_views);
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -658,6 +682,8 @@ void ShaderBasedRenderer::addSkyBox(const std::vector<video::ITexture*> &texture
     {
         m_spherical_harmonics->setTextures(spherical_harmonics_textures);
     }
+
+    printf("texture");
 }
 
 // ----------------------------------------------------------------------------
@@ -726,6 +752,8 @@ void ShaderBasedRenderer::render(float dt)
     }
 
     assert(Camera::getNumCameras() < MAX_PLAYER_COUNT + 1);
+
+    ///LA BOUCLE !!! THE ONE !!!!!
     for(unsigned int cam = 0; cam < Camera::getNumCameras(); cam++)
     {
         SP::sp_cur_player = cam;
@@ -763,7 +791,7 @@ void ShaderBasedRenderer::render(float dt)
         
         if (CVS->isDeferredEnabled())
         {
-            renderPostProcessing(camera, cam == 0);
+            renderPostProcessing(camera, cam == 0);//cam == 1 affiche que la vue du joueur 2
         }
 
         // Save projection-view matrix for the next frame
@@ -776,6 +804,9 @@ void ShaderBasedRenderer::render(float dt)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glUseProgram(0);
+
+
+///retire la grille d'info de là ...
 
     // Set the viewport back to the full screen for race gui
     irr_driver->getVideoDriver()->setViewPort(core::recti(0, 0,
@@ -815,6 +846,33 @@ void ShaderBasedRenderer::render(float dt)
 #ifdef DEBUG
     drawDebugMeshes();
 #endif
+
+
+/// ... à là
+
+    if (UserConfigParams::m_nb_views >1 ) {
+
+
+    MultiViewShader::getInstance()->use();
+
+    glBindVertexArray(SharedGPUObjects::getUI_VAO());
+
+/*
+
+     MultiViewShader::getInstance()->setTextureUnits(v1, v2, v3, v4);
+    MultiViewShader::getInstance()->setUniforms(...
+                    core::vector2df(center_pos_x, center_pos_y),
+                    core::vector2df(width, height),
+                    core::vector2df(tex_center_pos_x, tex_center_pos_y),
+                    core::vector2df(tex_width, tex_height)                );
+*/
+
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    } //end if
+
+
 
     PROFILER_PUSH_CPU_MARKER("EndScene", 0x45, 0x75, 0x45);
     irr_driver->getVideoDriver()->endScene();

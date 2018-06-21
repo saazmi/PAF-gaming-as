@@ -683,6 +683,8 @@ namespace UserConfigParams
      *  can store. */
     PARAM_PREFIX float m_profiler_buffer_duration PARAM_DEFAULT(20.0f);
 
+    PARAM_PREFIX int m_nb_views PARAM_DEFAULT(1);
+
     // ---- Networking
     PARAM_PREFIX StringToUIntUserConfigParam m_stun_list
         PARAM_DEFAULT(StringToUIntUserConfigParam("stun_list",
