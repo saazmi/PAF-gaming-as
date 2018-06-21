@@ -47,7 +47,7 @@
 
 #include "../../lib/irrlicht/source/Irrlicht/CSceneManager.h"
 #include "../../lib/irrlicht/source/Irrlicht/os.h"
-#include <algorithm> 
+#include <algorithm>
 
 // ----------------------------------------------------------------------------
 void ShaderBasedRenderer::setRTT(RTT* rtts)
@@ -134,9 +134,9 @@ void ShaderBasedRenderer::renderSSAO() const
                                   m_rtts->getDepthStencilTexture());
     // Blur it to reduce noise.
     FrameBuffer::blit(m_rtts->getFBO(FBO_SSAO),
-                      m_rtts->getFBO(FBO_HALF1_R), 
+                      m_rtts->getFBO(FBO_HALF1_R),
                       GL_COLOR_BUFFER_BIT, GL_LINEAR);
-    m_post_processing->renderGaussian17TapBlur(m_rtts->getFBO(FBO_HALF1_R), 
+    m_post_processing->renderGaussian17TapBlur(m_rtts->getFBO(FBO_HALF1_R),
                                                m_rtts->getFBO(FBO_HALF2_R),
                                                m_rtts->getFBO(FBO_LINEAR_DEPTH));
 
@@ -528,7 +528,7 @@ void ShaderBasedRenderer::debugPhysics()
         IrrDebugDrawer* debug_drawer = Physics::getInstance()->getDebugDrawer();
         if (debug_drawer != NULL && debug_drawer->debugEnabled())
         {
-            const std::map<video::SColor, std::vector<float> >& lines = 
+            const std::map<video::SColor, std::vector<float> >& lines =
                                                        debug_drawer->getLines();
             std::map<video::SColor, std::vector<float> >::const_iterator it;
 
@@ -571,15 +571,15 @@ void ShaderBasedRenderer::renderPostProcessing(Camera * const camera,
     // during scene rendering, but irrlicht thinks that nothing changed
     // when single camera is used. In this case we set the viewport
     // to whole screen manually.
-    glViewport(0, 0, irr_driver->getActualScreenSize().Width, 
+    glViewport(0, 0, irr_driver->getActualScreenSize().Width,
         irr_driver->getActualScreenSize().Height);
 
     if (SP::sp_debug_view)
     {
         m_rtts->getFBO(FBO_NORMAL_AND_DEPTHS).blitToDefault(
-            viewport.UpperLeftCorner.X, 
-            irr_driver->getActualScreenSize().Height - viewport.LowerRightCorner.Y, 
-            viewport.LowerRightCorner.X, 
+            viewport.UpperLeftCorner.X,
+            irr_driver->getActualScreenSize().Height - viewport.LowerRightCorner.Y,
+            viewport.LowerRightCorner.X,
             irr_driver->getActualScreenSize().Height - viewport.UpperLeftCorner.Y);
     }
     else if (irr_driver->getSSAOViz())
@@ -690,7 +690,7 @@ void ShaderBasedRenderer::addSkyBox(const std::vector<video::ITexture*> &texture
 void ShaderBasedRenderer::removeSkyBox()
 {
     delete m_skybox;
-    m_skybox = NULL;    
+    m_skybox = NULL;
 }
 
 // ----------------------------------------------------------------------------
@@ -735,7 +735,7 @@ void ShaderBasedRenderer::render(float dt)
 
     World *world = World::getWorld(); // Never NULL.
     Track *track = Track::getCurrentTrack();
-    
+
     RaceGUIBase *rg = world->getRaceGUI();
     if (rg) rg->update(dt);
 
@@ -772,11 +772,11 @@ void ShaderBasedRenderer::render(float dt)
         computeMatrixesAndCameras(camnode, m_rtts->getWidth(), m_rtts->getHeight());
         if (CVS->isDeferredEnabled())
         {
-            renderSceneDeferred(camnode, dt, track->hasShadows(), false); 
+            renderSceneDeferred(camnode, dt, track->hasShadows(), false);
         }
         else
         {
-            renderScene(camnode, dt, track->hasShadows(), false); 
+            renderScene(camnode, dt, track->hasShadows(), false);
         }
 
         if (irr_driver->getBoundingBoxesViz())
@@ -788,7 +788,7 @@ void ShaderBasedRenderer::render(float dt)
         }
 
         debugPhysics();
-        
+
         if (CVS->isDeferredEnabled())
         {
             renderPostProcessing(camera, cam == 0);//cam == 1 affiche que la vue du joueur 2
@@ -814,7 +814,7 @@ void ShaderBasedRenderer::render(float dt)
         irr_driver->getActualScreenSize().Height));
 
     m_current_screen_size = core::vector2df(
-                                    (float)irr_driver->getActualScreenSize().Width, 
+                                    (float)irr_driver->getActualScreenSize().Width,
                                     (float)irr_driver->getActualScreenSize().Height);
 
     for(unsigned int i=0; i<Camera::getNumCameras(); i++)

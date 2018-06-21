@@ -336,7 +336,7 @@ void SkiddingAI::update(int ticks)
        {
            // Use nitro if the kart is far ahead, or faster than this kart
            handleNitroAndZipper(item_skill);
-          
+
            // If we are close enough, try to hit this kart
            if(m_distance_ahead<=10)
            {
@@ -1160,7 +1160,7 @@ void SkiddingAI::handleItems(const float dt, const Vec3 *aim_point, int last_nod
         return;
 
     m_time_since_last_shot += dt;
-   
+
     //time since last shot is meant to avoid using the same item
     //several times in rapid succession ; not to wait to use a useful
     //collected item
@@ -1168,7 +1168,7 @@ void SkiddingAI::handleItems(const float dt, const Vec3 *aim_point, int last_nod
     {
        m_time_since_last_shot = 50.0f; //The AI may wait if the value is low, so set a high value
     }
-   
+
     if (m_superpower == RaceManager::SUPERPOWER_NOLOK_BOSS)
     {
         m_controls->setLookBack(m_kart->getPowerup()->getType() ==
@@ -1206,7 +1206,7 @@ void SkiddingAI::handleItems(const float dt, const Vec3 *aim_point, int last_nod
         int random_t = 0;
         random_t = m_random_skid.get(6); //Reuse the random skid generator
         random_t = random_t + 5;
-          
+
         if( m_time_since_last_shot > random_t )
         {
             m_controls->setFire(true);
@@ -1255,7 +1255,7 @@ void SkiddingAI::handleItems(const float dt, const Vec3 *aim_point, int last_nod
 
     //items_to_avoid and items_to_collect now contain the closest item information needed after
     //What matters is (a) if the lists are void ; (b) if they are not, what kind of item it is
-   
+
     switch( m_kart->getPowerup()->getType() )
     {
     case PowerupManager::POWERUP_BUBBLEGUM:
@@ -1263,7 +1263,7 @@ void SkiddingAI::handleItems(const float dt, const Vec3 *aim_point, int last_nod
             handleBubblegum(item_skill, items_to_collect, items_to_avoid);
             break;
         } // POWERUP_BUBBLEGUM
-          
+
     case PowerupManager::POWERUP_CAKE:
         {
             // if the kart has a shield, do not break it by using a cake.
@@ -1273,7 +1273,7 @@ void SkiddingAI::handleItems(const float dt, const Vec3 *aim_point, int last_nod
             handleCake(item_skill);
             break;
         }   // POWERUP_CAKE
-          
+
     case PowerupManager::POWERUP_BOWLING:
         {
             // if the kart has a shield, do not break it by using a bowling ball.
@@ -1375,19 +1375,19 @@ void SkiddingAI::handleBubblegum(int item_skill, const std::vector<const Item *>
     projectile_types[1] = projectile_manager->getNearbyProjectileCount(m_kart, shield_radius, PowerupManager::POWERUP_PLUNGER);
     projectile_types[2] = projectile_manager->getNearbyProjectileCount(m_kart, shield_radius, PowerupManager::POWERUP_CAKE);
     projectile_types[3] = projectile_manager->getNearbyProjectileCount(m_kart, shield_radius, PowerupManager::POWERUP_RUBBERBALL);
-   
+
     bool projectile_is_close = false;
     projectile_is_close = projectile_manager->projectileIsClose(m_kart, shield_radius);
 
     Attachment::AttachmentType type = m_kart->getAttachment()->getType();
-    
+
     if((item_skill == 2) && (m_time_since_last_shot > 2.0f))
     {
         m_controls->setFire(true);
         m_controls->setLookBack(false);
         return;
     }
-    
+
     // Check if a flyable (cake, ...) is close. If so, use bubblegum
     // as shield
     if(item_skill == 3) //don't protect against cakes
@@ -1417,7 +1417,7 @@ void SkiddingAI::handleBubblegum(int item_skill, const std::vector<const Item *>
              m_controls->setLookBack(false);
              return;
           }
-       } 
+       }
     }
     else if (item_skill == 5) //don't protect against plungers alone
     {
@@ -1459,14 +1459,14 @@ void SkiddingAI::handleBubblegum(int item_skill, const std::vector<const Item *>
         m_controls->setLookBack(false);
         return;
     }
-    
+
     // Use shield if kart is going to hit a bad item (banana or bubblegum)
-    if((item_skill == 4) || (item_skill == 5)) 
+    if((item_skill == 4) || (item_skill == 5))
     {
        if( !m_kart->isShielded() && items_to_avoid.size()>0)
        {
           float d = (items_to_avoid[0]->getXYZ() - m_kart->getXYZ()).length2();
-          
+
           if ((item_skill == 4 && d < 1.5f) || (item_skill == 5 && d < 0.7f))
           {
              m_controls->setFire(true);
@@ -1475,23 +1475,23 @@ void SkiddingAI::handleBubblegum(int item_skill, const std::vector<const Item *>
           }
        }
     }
-    
+
     // Use shield if kart is going to hit an item box
     if (item_skill == 5)
     {
        if( !m_kart->isShielded() && items_to_collect.size()>0)
        {
           float d = (items_to_collect[0]->getXYZ() - m_kart->getXYZ()).length2();
-          
+
           if ((items_to_collect[0]->getType() == Item::ITEM_BONUS_BOX) && (d < 0.7f))
           {
              m_controls->setFire(true);
              m_controls->setLookBack(false);
              return;
           }
-       }      
+       }
     }
-      
+
     // Avoid dropping all bubble gums one after another
     if( m_time_since_last_shot < 2.0f) return;
 
@@ -1590,7 +1590,7 @@ void SkiddingAI::handleCake(int item_skill)
     // we can either save the cake for later since we will overtake
     // the kart anyway, or that this might force the kart ahead to
     // use its nitro/zipper (and then we will shoot since then the
-    // kart is faster).    
+    // kart is faster).
     if(item_skill >= 3)
     {
         if (kart_behind_is_slow) fire_behind -= 50.0f;
@@ -1613,7 +1613,7 @@ void SkiddingAI::handleCake(int item_skill)
         bool kart_ahead_has_swatter = false;
         if (m_kart_ahead)
         {
-            kart_ahead_has_swatter = (m_kart_ahead->getAttachment()->getType() 
+            kart_ahead_has_swatter = (m_kart_ahead->getAttachment()->getType()
                                       == Attachment::ATTACH_SWATTER);
         }
 
@@ -1661,7 +1661,7 @@ void SkiddingAI::handleCake(int item_skill)
              or straight behind, and not invulnerable, with a 5 second delay
  * Level 3 : Only 3 seconds of delay
  * Level 4 : Same as level 3
- * Level 5 : Level 4 and don't fire on a shielded kart if we're just behind (gum) 
+ * Level 5 : Level 4 and don't fire on a shielded kart if we're just behind (gum)
  *  \param item_skill The skill with which to use the item
  */
 void SkiddingAI::handleBowling(int item_skill)
@@ -1748,13 +1748,13 @@ void SkiddingAI::handleBowling(int item_skill)
 void SkiddingAI::handleSwatter(int item_skill)
 {
     Attachment::AttachmentType type = m_kart->getAttachment()->getType();
-    
+
     if((item_skill == 2) && (m_time_since_last_shot > 2.0f))
     {
         m_controls->setFire(true);
         return;
     }
-    
+
     // Use swatter to remove bad attachments
     if((item_skill == 4) || (item_skill == 5))
     {
@@ -1818,13 +1818,13 @@ void SkiddingAI::handleSwitch(int item_skill, const std::vector<const Item *> &i
            return;
         }
     }
-             
+
     else if((item_skill == 3) || (item_skill == 4))
     {
        if( (item_skill == 4) && items_to_avoid.size() > 0)
        {
            float d = (items_to_avoid[0]->getXYZ() - m_kart->getXYZ()).length2();
-       
+
            if (d < 2.0f)
            {
                m_controls->setFire(true);
@@ -1834,7 +1834,7 @@ void SkiddingAI::handleSwitch(int item_skill, const std::vector<const Item *> &i
         else if (items_to_collect.size() > 0)
         {
             float d = (items_to_collect[0]->getXYZ() - m_kart->getXYZ()).length2();
-       
+
             if (d > 10.0f)
             {
                m_controls->setFire(true);
@@ -1847,7 +1847,7 @@ void SkiddingAI::handleSwitch(int item_skill, const std::vector<const Item *> &i
              return;
         }
     }
-       
+
     //TODO : retrieve ranking powerup class and use it to evaluate the best item
     //       available depending of if the switch is used or not
     //       In the mean time big nitro > item box > small nitro
@@ -1858,7 +1858,7 @@ void SkiddingAI::handleSwitch(int item_skill, const std::vector<const Item *> &i
     //It should also be possible but complicated to discard items when a good
     //and a bad one are two close from one another
     else if(item_skill == 5)
-    {  
+    {
        //First step : identify the best available item
        int i;
        int bad = 0;
@@ -1879,7 +1879,7 @@ void SkiddingAI::handleSwitch(int item_skill, const std::vector<const Item *> &i
               good = 1;
           }
        }
-           
+
        //Bad will store 2 for bananas, 3 for bubble gum
        for(i=items_to_avoid.size()-1; i>=0; i--)
        {
@@ -1893,12 +1893,12 @@ void SkiddingAI::handleSwitch(int item_skill, const std::vector<const Item *> &i
               bad = 2;
            }
        }
-           
+
        //Second step : make sure a close item don't make the choice pointless
        if( items_to_avoid.size()>0)
        {
            float d = (items_to_avoid[0]->getXYZ() - m_kart->getXYZ()).length2();
-       
+
            //fire if very close to a bad item
            if (d < 2.0f)
            {
@@ -1909,14 +1909,14 @@ void SkiddingAI::handleSwitch(int item_skill, const std::vector<const Item *> &i
        if( items_to_collect.size()>0)
        {
           float d = (items_to_collect[0]->getXYZ() - m_kart->getXYZ()).length2();
-       
+
           //don't fire if close to a good item
           if (d < 5.0f)
           {
              return;
           }
        }
-           
+
        //Third step : Use or don't use to get the best available item
        if( bad > good)
        {
@@ -1925,7 +1925,7 @@ void SkiddingAI::handleSwitch(int item_skill, const std::vector<const Item *> &i
        }
     } //item_skill == 5
 
-    return;  
+    return;
 } //handleSwitch
 
 //-----------------------------------------------------------------------------
@@ -1988,7 +1988,7 @@ void SkiddingAI::computeNearestKarts()
         unsigned int kart_id = m_world->getPlayerKart(i)->getWorldKartId();
         overall_distance.push_back(m_world->getOverallDistance(kart_id));
     }
-   
+
     // Sort the list
     std::sort(overall_distance.begin(), overall_distance.end());
 
@@ -2014,13 +2014,13 @@ void SkiddingAI::computeNearestKarts()
         int position_among_ai = m_kart->getPosition() - m_num_players_ahead;
         // Converts a position among AI to a position among players
         float ideal_target = 1.0f;
-       
+
         // Avoid a division by 0.
         // If there is only one AI, it will target the first player
         if (num_ai > 1)
             ideal_target = ((position_among_ai-1) / ((float) num_ai-1)
                              * ((float) race_manager->getNumPlayers()-1)) + 1.0f;
-        
+
         // Substract 1 as index start from 0 and add 0.5 to get rounding
         // The cast truncate the decimals, so it won't go over n-1
         // as the highest possible ideal_target is n
@@ -2121,7 +2121,7 @@ void SkiddingAI::handleRescue(const float dt)
 void SkiddingAI::handleNitroAndZipper(int item_skill)
 {
    int nitro_skill = computeSkill(NITRO_SKILL);
-   
+
    //Nitro continue to be advantageous during the fadeout
    int nitro_ticks = m_kart->getSpeedIncreaseTicksLeft(MaxSpeed::MS_INCREASE_NITRO);
    float nitro_time = ( stk_config->ticks2Time(nitro_ticks)
@@ -2140,30 +2140,30 @@ void SkiddingAI::handleNitroAndZipper(int item_skill)
    //                to bad items, and has a target reserve of 8 energy
    //Nitro skill 4 : Same as level 3, but don't use until 0.05 seconds of effect/fadeout left and ignore the plunger
    //                and has a target reserve of 12 energy
-   
+
     m_controls->setNitro(false);
-   
+
    float energy_reserve = 0;
-   
+
    if (nitro_skill == 2)
    {
-      energy_reserve = 4;  
+      energy_reserve = 4;
    }
    if (nitro_skill == 3)
    {
-      energy_reserve = 8;  
+      energy_reserve = 8;
    }
    if (nitro_skill == 4)
    {
-      energy_reserve = 12;  
+      energy_reserve = 12;
    }
-   
+
     // Don't use nitro or zipper if we are braking
     if(m_controls->getBrake()) return;
-   
+
     // Don't use nitro or zipper if the kart is not on ground or has finished the race
     if(!m_kart->isOnGround() || m_kart->hasFinishedRace()) return;
-   
+
     // Don't use nitro or zipper when the AI has a plunger in the face!
     if(m_kart->getBlockedByPlungerTicks()>0)
     {
@@ -2173,27 +2173,27 @@ void SkiddingAI::handleNitroAndZipper(int item_skill)
         }
        else if (nitro_skill < 4)
        {
-           nitro_skill = 0;  
+           nitro_skill = 0;
        }
        else if (item_skill < 5)
        {
-           item_skill = 0;  
+           item_skill = 0;
        }
     }
-   
+
     // If a parachute or anvil is attached, the nitro and zipper don't give much
     // benefit. Better wait till later.
     const bool has_slowdown_attachment =
         m_kart->getAttachment()->getType()==Attachment::ATTACH_PARACHUTE ||
         m_kart->getAttachment()->getType()==Attachment::ATTACH_ANVIL;
     if(has_slowdown_attachment) return;
-   
+
     // Don't compute nitro usage if we don't have nitro
     if( m_kart->getEnergy()==0 )
     {
        nitro_skill = 0;
     }
-   
+
     // Don't use nitro if there is already a nitro boost active
     // Nitro effect and fadeout varies between karts type from 2 to 4 seconds
     // So vary time according to kart properties
@@ -2209,22 +2209,22 @@ void SkiddingAI::handleNitroAndZipper(int item_skill)
     {
        nitro_skill = 0;
     }
-   
+
     // If there are items to avoid close
     // Don't use zippers
     // Dont use nitro if nitro_skill is 3 or 4
     // (since going faster makes it harder to avoid items).
     if(m_avoid_item_close && (m_kart->getEnergy()==0 || nitro_skill == 0 || nitro_skill >= 3) )
         return;
-   
+
     // If basic AI, use nitro immediately
-   
+
     if (nitro_skill == 1)
     {
         m_controls->setNitro(true);
         return;
     }
-   
+
     // Estimate time towards the end of the race.
     // Decreases the reserve size when there is an estimate of time remaining
     // to the end of less than 2,5 times the maximum nitro effect duration.
@@ -2237,19 +2237,19 @@ void SkiddingAI::handleNitroAndZipper(int item_skill)
         float finish = m_world->getEstimatedFinishTime(m_kart->getWorldKartId()) - m_world->getTime();
         float max_time_effect = nitro_max_time / m_kart->getKartProperties()->getNitroConsumption()
                                 * m_kart->getEnergy()*2; //the minimum burst consumes around 0.5 energy
-       
+
         // The burster forces the AI to consume its reserve by series of 2 bursts
         // Otherwise the bursting differences of the various nitro skill wouldn't matter here
         // In short races, most AI nitro usage may be at the end with the reserve
         float burster;
-        
+
         if ( nitro_time > 0)
         {
            burster = 2*nitro_max_time;
         }
         else
         {
-             burster = 0;  
+             burster = 0;
         }
         if( (2.5f*max_time_effect) >= (finish - burster) )
         {
@@ -2257,7 +2257,7 @@ void SkiddingAI::handleNitroAndZipper(int item_skill)
             energy_reserve = (finish - burster)/(2.5f*max_time_effect/m_kart->getEnergy()) - 0.5f ;
         }
     }
-   
+
     // If trying to pass a bomb to a kart faster or far ahead, use nitro reserve
     if(m_kart->getAttachment()->getType() == Attachment::ATTACH_BOMB
        && nitro_skill >= 2 && energy_reserve > 0.0f)
@@ -2267,11 +2267,11 @@ void SkiddingAI::handleNitroAndZipper(int item_skill)
             energy_reserve = 0 ;
         }
     }
-   
+
     // Don't use nitro if building an energy reserve
     if (m_kart->getEnergy() <= energy_reserve)
     {
-        nitro_skill = 0;  
+        nitro_skill = 0;
     }
 
     // If the kart is very slow (e.g. after rescue), use nitro
@@ -2280,7 +2280,7 @@ void SkiddingAI::handleNitroAndZipper(int item_skill)
         m_controls->setNitro(true);
         return;
     }
-   
+
    // If kart is at max speed, use nitro
    // This is to profit from the max speed increase
    // And because it means there should be no slowing down from, e.g. plungers
@@ -2299,9 +2299,9 @@ void SkiddingAI::handleNitroAndZipper(int item_skill)
         m_controls->setNitro(true);
         return;
     }
-   
+
     // Use zipper
-    if(m_kart->getPowerup()->getType() == PowerupManager::POWERUP_ZIPPER 
+    if(m_kart->getPowerup()->getType() == PowerupManager::POWERUP_ZIPPER
         && item_skill >= 2 && m_kart->getSpeed()>1.0f &&
         m_kart->getSpeedIncreaseTicksLeft(MaxSpeed::MS_INCREASE_ZIPPER)<=0)
     {
@@ -2342,7 +2342,7 @@ int SkiddingAI::computeSkill(SkillType type)
             }
         }
 
-   
+
         if (m_kart->getBoostAI() == true)
         {
             if (item_skill < 5)
@@ -2368,7 +2368,7 @@ int SkiddingAI::computeSkill(SkillType type)
                 nitro_skill = m_ai_properties->m_nitro_usage;
             }
         }
-   
+
         if (m_kart->getBoostAI() == true)
         {
             if (nitro_skill < 4)
@@ -2378,7 +2378,7 @@ int SkiddingAI::computeSkill(SkillType type)
         }
         return nitro_skill;
     }
-    
+
     return 0;
 } //computeSkill
 
