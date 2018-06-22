@@ -39,7 +39,7 @@ GL1RenderTarget::GL1RenderTarget(const irr::core::dimension2du &dimension,
     }
     else
     {
-        // m_render_target_texture will be NULL if RTT doesn't work on this 
+        // m_render_target_texture will be NULL if RTT doesn't work on this
         // computer
         Log::error("GL1RenderTarget", "Cannot render to texture.");
     }
@@ -152,5 +152,15 @@ void GL3RenderTarget::draw2DImage(const irr::core::rect<s32>& dest_rect,
                        dest_rect, source_rect,
                        clip_rect, colors, use_alpha_channel_of_texture);
 }   // draw2DImage
+
+
+//ajout du getter
+//-----------------------------------------------------------------------------
+int GL3RenderTarget::getTexture()
+{
+  return m_frame_buffer->getRTT()[0];
+}
+
+
 
 #endif   // !SERVER_ONLY

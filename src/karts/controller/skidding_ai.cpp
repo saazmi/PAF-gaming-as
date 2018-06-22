@@ -587,7 +587,7 @@ void SkiddingAI::handleSteering(float dt)
  *     item is unselected. This can happens if e.g. items-to-avoid are behind
  *     the pre-selected items on a different graph node and were therefore not
  *     evaluated then the now pre-selected item was selected initially.
- *  3. If a pre-selected item exists, the kart will steer towards it. The AI
+ *    3. If a pre-selected item exists, the kart will steer towards it. The AI
  *     does a much better job of collecting items if after selecting an item
  *     it tries to collect this item even if it doesn't fulfill the original
  *     conditions to be selected in the first place anymore. Example: An item
@@ -2027,6 +2027,7 @@ void SkiddingAI::computeNearestKarts()
         int target_index = (int) (ideal_target - 0.5f);
         if (target_index > (int)n-1) target_index = (int)n-1;
         assert(target_index >= 0 && target_index <= (int)n-1);
+    
         target_overall_distance = overall_distance[target_index];
     }
     // Now convert 'maximum overall distance' to distance to player.

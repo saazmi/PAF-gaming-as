@@ -114,7 +114,7 @@ FileManager* file_manager = 0;
 /** The constructor of the file manager creates an irrlicht file system and
  *  detects paths for the user config file and assets base directory (data).
  *  A second initialisation is done later once (see init()), once the user
- *  config file is read. This is necessary since part of discoverPaths 
+ *  config file is read. This is necessary since part of discoverPaths
  *  depend on artist debug mode.
  */
 FileManager::FileManager()
@@ -205,17 +205,17 @@ FileManager::FileManager()
     {
         Log::error("FileManager", "Could not file '%s'in any "
                    "standard location (esp. ../data).", version.c_str());
-        Log::error("FileManager", 
+        Log::error("FileManager",
                    "Last location checked '%s'.", root_dir.c_str());
-        Log::fatal("FileManager", 
+        Log::fatal("FileManager",
                    "Set $SUPERTUXKART_DATADIR to point to the data directory.");
         // fatal will exit the application
     }
-    
+
     addRootDirs(root_dir);
-    
+
     std::string assets_dir;
-    
+
     if (getenv("SUPERTUXKART_ASSETS_DIR") != NULL)
     {
         assets_dir = std::string(getenv("SUPERTUXKART_ASSETS_DIR"));
@@ -233,7 +233,7 @@ FileManager::FileManager()
         //is this needed?
         assets_dir = std::string(getenv("SUPERTUXKART_ROOT_PATH"));
     }
-    
+
     if (!assets_dir.empty() && assets_dir != root_dir)
     {
         addRootDirs(assets_dir);
@@ -1370,8 +1370,8 @@ bool FileManager::removeDirectory(const std::string &name) const
 
     for (std::string file : files)
     {
-        if (file == "." || file == ".." || file == name + "/." || 
-            file == name + "/..") 
+        if (file == "." || file == ".." || file == name + "/." ||
+            file == name + "/..")
             continue;
 
         if (UserConfigParams::logMisc())
@@ -1395,7 +1395,7 @@ bool FileManager::removeDirectory(const std::string &name) const
             removeFile(file);
         }
     }
-    
+
 #if defined(WIN32)
     return RemoveDirectory(name.c_str())==TRUE;
 #else
@@ -1461,4 +1461,3 @@ bool FileManager::fileIsNewer(const std::string& f1, const std::string& f2) cons
     stat(f2.c_str(), &stat2);
     return stat1.st_mtime > stat2.st_mtime;
 }   // fileIsNewer
-

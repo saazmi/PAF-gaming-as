@@ -751,16 +751,33 @@ void ShaderBasedRenderer::render(float dt)
         PROFILER_POP_CPU_MARKER();
     }
 
+    GL3RenderTarget *views_tx_objects[8];
+    GL3RenderTarget * renderTarget;
     assert(Camera::getNumCameras() < MAX_PLAYER_COUNT + 1);
 
     ///LA BOUCLE !!! THE ONE !!!!!
     for(unsigned int cam = 0; cam < Camera::getNumCameras(); cam++)
     {
+      for (unsigned int i=0; i < 1;i++) {
+
+        char buffer[100];
+        sprintf(buffer,"target%d",cam*2+i);
+        if (!views_tx_objects[2*(cam)+i])
+          {
+            views_tx_objects[2*(cam)+i]=new GL3RenderTarget(irr::core::dimension2du(m_rtts->getWidth(), m_rtts->getHeight()),buffer,this);
+          }
+    //    GL3RenderTarget * renderTarget = createRenderTarget(irr::core::dimension2du(m_rtts->getWidth(), m_rtts->getHeight(),buffer);
+        renderTarget=views_tx_objects[2*(cam)+i];
         SP::sp_cur_player = cam;
         SP::sp_cur_buf_id[cam] = (SP::sp_cur_buf_id[cam] + 1) % 3;
         Camera * const camera = Camera::getCamera(cam);
         scene::ICameraSceneNode * const camnode = camera->getCameraSceneNode();
 
+        renderTarget->renderToTexture(camnode,dt);
+        GLuint texture_cam_i = renderTarget->getTexture();
+
+
+        /*
         std::ostringstream oss;
         oss << "drawAll() for kart " << cam;
         PROFILER_PUSH_CPU_MARKER(oss.str().c_str(), (cam+1)*60,
@@ -792,18 +809,31 @@ void ShaderBasedRenderer::render(float dt)
         if (CVS->isDeferredEnabled())
         {
             renderPostProcessing(camera, cam == 0);//cam == 1 affiche que la vue du joueur 2
-        }
+        }*/
 
         // Save projection-view matrix for the next frame
         camera->setPreviousPVMatrix(irr_driver->getProjViewMatrix());
 
         PROFILER_POP_CPU_MARKER();
+      }
+  }
+   irr::core::rect< s32 > dest =
+      irr::core::rect< s32 >(0,0,m_rtts->getWidth(), m_rtts->getHeight());
 
-    }  // for i<world->getNumKarts()
+
+    //irr::video::SColor& colors=irr::video::SColor(0,255,255,255);
+
+
+  //  renderTarget->draw2DImage(dest,0,0,true)
+
+
+      // for i<world->getNumKarts()
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glUseProgram(0);
+//suppression des overlay avec les commentaire
+/*
 
 
 ///retire la grille d'info de là ...
@@ -846,6 +876,7 @@ void ShaderBasedRenderer::render(float dt)
 #ifdef DEBUG
     drawDebugMeshes();
 #endif
+*/
 
 
 /// ... à là
