@@ -207,10 +207,10 @@ void CreditsScreen::loadedFromFile()
         m_sections.swap( m_sections.size() - 1, m_sections.size() - 2 );
     }
 
-    if (!Online::LinkHelper::isSupported())
+  /*  if (!Online::LinkHelper::isSupported())
     {
         getWidget("donate")->setVisible(false);
-    }
+    }*/
 }   // loadedFromFile
 
 // ----------------------------------------------------------------------------
@@ -398,12 +398,11 @@ void CreditsScreen::eventCallback(GUIEngine::Widget* widget,
     {
         StateManager::get()->escapePressed();
     }
-    if (name == "donate")
+/*    if (name == "donate")
     {
         // Open donation page
         Online::LinkHelper::openURL(stk_config->m_donate_url);
-    }
+    }*/
 }
 
 // ----------------------------------------------------------------------------
-

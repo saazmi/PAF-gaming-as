@@ -623,6 +623,10 @@ ShaderBasedRenderer::ShaderBasedRenderer()
     if (UserConfigParams::m_nb_views) {
     	fprintf(stderr, "nb views %d!", UserConfigParams::m_nb_views);
     }
+
+    for (unsigned int i=0;i<8;i++) {
+    	views_tx_objects[i]=NULL;
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -751,14 +755,15 @@ void ShaderBasedRenderer::render(float dt)
         PROFILER_POP_CPU_MARKER();
     }
 
-    GL3RenderTarget *views_tx_objects[8];
     GL3RenderTarget * renderTarget;
     assert(Camera::getNumCameras() < MAX_PLAYER_COUNT + 1);
+
 
     ///LA BOUCLE !!! THE ONE !!!!!
     for(unsigned int cam = 0; cam < Camera::getNumCameras(); cam++)
     {
-      for (unsigned int i=0; i < 1;i++) {
+      unsigned int i=0;
+    //  for (i=0; i < 1;i++) {
 
         char buffer[100];
         sprintf(buffer,"target%d",cam*2+i);
@@ -767,17 +772,18 @@ void ShaderBasedRenderer::render(float dt)
             views_tx_objects[2*(cam)+i]=new GL3RenderTarget(irr::core::dimension2du(m_rtts->getWidth(), m_rtts->getHeight()),buffer,this);
           }
     //    GL3RenderTarget * renderTarget = createRenderTarget(irr::core::dimension2du(m_rtts->getWidth(), m_rtts->getHeight(),buffer);
-        renderTarget=views_tx_objects[2*(cam)+i];
+      //  renderTarget=views_tx_objects[2*(cam)+i];
         SP::sp_cur_player = cam;
         SP::sp_cur_buf_id[cam] = (SP::sp_cur_buf_id[cam] + 1) % 3;
         Camera * const camera = Camera::getCamera(cam);
         scene::ICameraSceneNode * const camnode = camera->getCameraSceneNode();
 
+        renderTarget = views_tx_objects[2*(cam)+i];
         renderTarget->renderToTexture(camnode,dt);
-        GLuint texture_cam_i = renderTarget->getTexture();
+  //        GLuint texture_cam_i = renderTarget->getTexture();
 
 
-        /*
+/*
         std::ostringstream oss;
         oss << "drawAll() for kart " << cam;
         PROFILER_PUSH_CPU_MARKER(oss.str().c_str(), (cam+1)*60,
@@ -809,18 +815,14 @@ void ShaderBasedRenderer::render(float dt)
         if (CVS->isDeferredEnabled())
         {
             renderPostProcessing(camera, cam == 0);//cam == 1 affiche que la vue du joueur 2
-        }*/
-
+        }
+*/
         // Save projection-view matrix for the next frame
         camera->setPreviousPVMatrix(irr_driver->getProjViewMatrix());
 
         PROFILER_POP_CPU_MARKER();
-      }
+    //  }
   }
-   irr::core::rect< s32 > dest =
-      irr::core::rect< s32 >(0,0,m_rtts->getWidth(), m_rtts->getHeight());
-
-
     //irr::video::SColor& colors=irr::video::SColor(0,255,255,255);
 
 
@@ -888,15 +890,19 @@ void ShaderBasedRenderer::render(float dt)
 
     glBindVertexArray(SharedGPUObjects::getUI_VAO());
 
-/*
 
-     MultiViewShader::getInstance()->setTextureUnits(v1, v2, v3, v4);
-    MultiViewShader::getInstance()->setUniforms(...
+    GLuint texture_cam_id = views_tx_objects[0]->getTexture();
+
+
+     MultiViewShader::getInstance()->setTextureUnits(texture_cam_id,0,0,0);
+
+  /*
+   MultiViewShader::getInstance()->setUniforms(...
                     core::vector2df(center_pos_x, center_pos_y),
                     core::vector2df(width, height),
                     core::vector2df(tex_center_pos_x, tex_center_pos_y),
-                    core::vector2df(tex_width, tex_height)                );
-*/
+                    core::vector2df(tex_width, tex_height) );
+ */
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArray(0);

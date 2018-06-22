@@ -109,7 +109,7 @@ void RegisterScreen::init()
     makeEntryFieldsVisible();
 
     local_username->setFocusForPlayer(PLAYER_ID_GAME_MASTER);
-    
+
     // The behaviour of the screen is slightly different at startup, i.e.
     // when it is the first screen: cancel will exit the game, and in
     // this case no 'back' error should be shown.
@@ -152,7 +152,7 @@ void RegisterScreen::onDialogClose()
 }   // onDialogClose
 
 // -----------------------------------------------------------------------------
-void RegisterScreen::onFocusChanged(GUIEngine::Widget* previous, 
+void RegisterScreen::onFocusChanged(GUIEngine::Widget* previous,
                                     GUIEngine::Widget* focus,  int playerID)
 {
     TextBoxWidget *online_name = getWidget<TextBoxWidget>("username");
@@ -195,7 +195,7 @@ void RegisterScreen::makeEntryFieldsVisible()
         getWidget<LabelWidget  >("label_email_confirm")->setVisible(new_account);
     }
 
-    getWidget<ButtonWidget >("password_reset")->setVisible(LinkHelper::isSupported() && (online && !new_account));
+//    getWidget<ButtonWidget >("password_reset")->setVisible(LinkHelper::isSupported() && (online && !new_account));
 }   // makeEntryFieldsVisible
 
 // -----------------------------------------------------------------------------
@@ -249,7 +249,7 @@ void RegisterScreen::doRegister()
 {
     stringw local_name = getWidget<TextBoxWidget>("local_username")
                        ->getText().trim();
-                       
+
     if (local_name.empty())
     {
         m_info_widget->setErrorColor();
@@ -264,8 +264,8 @@ void RegisterScreen::doRegister()
     {
         bool online = m_account_mode == ACCOUNT_EXISTING_ONLINE;
         core::stringw password = online ? m_password_widget->getText() : "";
-        core::stringw online_name = 
-            online ? getWidget<TextBoxWidget>("username")->getText().trim() 
+        core::stringw online_name =
+            online ? getWidget<TextBoxWidget>("username")->getText().trim()
                    : "";
         m_parent_screen->setNewAccountData(online, /*auto login*/true,
                                            online_name, password);
@@ -283,7 +283,7 @@ void RegisterScreen::doRegister()
     // If there is an email_confirm field, use it and check if the email
     // address is correct. If there is no such field, set the confirm email
     // address to email address (so the test below will be passed).
-    stringw email_confirm = getWidget<TextBoxWidget>("email_confirm") 
+    stringw email_confirm = getWidget<TextBoxWidget>("email_confirm")
                           ? getWidget<TextBoxWidget>("email_confirm")->getText()
                           : getWidget<TextBoxWidget>("email")->getText();
     email_confirm.trim();
@@ -329,7 +329,7 @@ void RegisterScreen::doRegister()
             if (player)
             {
                 core::stringw online_name = getWidget<TextBoxWidget>("username")->getText().trim();
-                m_parent_screen->setNewAccountData(/*online*/true, 
+                m_parent_screen->setNewAccountData(/*online*/true,
                                                    /*auto_login*/false,
                                                    username, password);
 
@@ -448,11 +448,11 @@ void RegisterScreen::eventCallback(Widget* widget, const std::string& name,
             onEscapePressed();
         }
     }
-    else if (name == "password_reset")
+/*    else if (name == "password_reset")
     {
         // Open password reset page
         Online::LinkHelper::openURL(stk_config->m_password_reset_url);
-    }
+    }*/
     else if (name == "back")
     {
         m_existing_player = NULL;
@@ -476,4 +476,3 @@ bool RegisterScreen::onEscapePressed()
     }
     return true;
 }   // onEscapePressed
-

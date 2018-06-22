@@ -72,7 +72,7 @@ void BaseUserScreen::loadedFromFile()
 }   // loadedFromFile
 
 // ----------------------------------------------------------------------------
-/** Stores information from the register screen. It allows this screen to 
+/** Stores information from the register screen. It allows this screen to
  *  use the entered user name and password to prefill fields so that the user
  *  does not have to enter them again.
  *  \param online If the user created an online account.
@@ -95,7 +95,7 @@ void BaseUserScreen::setNewAccountData(bool online, bool auto_login,
 }   // setOnline
 
 // ----------------------------------------------------------------------------
-/** Initialises the user screen. Searches for all players to fill the 
+/** Initialises the user screen. Searches for all players to fill the
  *  list of users with their icons, and initialises all widgets for the
  *  current user (e.g. the online flag etc).
  */
@@ -108,8 +108,8 @@ void BaseUserScreen::init()
     // this case no 'back' error should be shown.
     bool is_first_screen = StateManager::get()->getMenuStackSize()==1;
     getWidget<IconButtonWidget>("back")->setVisible(!is_first_screen);
-    getWidget<IconButtonWidget>("cancel")->setLabel(is_first_screen 
-                                                    ? _("Exit game") 
+    getWidget<IconButtonWidget>("cancel")->setLabel(is_first_screen
+                                                    ? _("Exit game")
                                                     : _("Cancel")      );
 
     m_sign_out_name = "";
@@ -219,7 +219,7 @@ void BaseUserScreen::selectUser(int index)
     bool focus_it = !getWidget<RibbonWidget>("options_choice");
     m_players->setSelection(StringUtils::toString(index), PLAYER_ID_GAME_MASTER,
                             focus_it);
-    
+
     if (!m_new_registered_data)
         m_username_tb->setText(profile->getLastOnlineName(true/*ignoreRTL*/));
 
@@ -279,9 +279,9 @@ void BaseUserScreen::makeEntryFieldsVisible()
     // and either is the current player and logged in (no need to enter a
     // password then) or has a saved session.
     if(player && online  &&
-        (player->hasSavedSession() || 
-          (player==PlayerManager::getCurrentPlayer() && player->isLoggedIn() ) 
-        ) 
+        (player->hasSavedSession() ||
+          (player==PlayerManager::getCurrentPlayer() && player->isLoggedIn() )
+        )
       )
     {
         // If we show the online login fields, but the player has a
@@ -294,7 +294,7 @@ void BaseUserScreen::makeEntryFieldsVisible()
     {
         getWidget<LabelWidget>("label_password")->setVisible(online);
         m_password_tb->setVisible(online);
-        getWidget<ButtonWidget>("password_reset")->setVisible(Online::LinkHelper::isSupported() && online);
+//        getWidget<ButtonWidget>("password_reset")->setVisible(Online::LinkHelper::isSupported() && online);
         // Is user has no online name, make sure the user can enter one
         if (player->getLastOnlineName().empty())
             m_username_tb->setActive(true);
@@ -379,11 +379,11 @@ void BaseUserScreen::eventCallback(Widget* widget,
         }
         makeEntryFieldsVisible();
     }
-    else if (name == "password_reset")
+/*    else if (name == "password_reset")
     {
         // Open password reset page
         Online::LinkHelper::openURL(stk_config->m_password_reset_url);
-    }
+    }*/
     else if (name == "options")
     {
         const std::string &button =
