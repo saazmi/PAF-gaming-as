@@ -184,12 +184,23 @@ public:
     /** Sets the field of view for the irrlicht camera. */
     void setFoV() { m_camera->setFOV(m_fov); }
     // ------------------------------------------------------------------------
+    /** customizable FoV*/
+    void setFoV(float lul) { m_camera->setFOV(lul);}
+    // ------------------------------------------------------------------------
+    /**sets the aspect ratio*/
+    void setAspectRatio(float lul) { m_camera->setAspectRatio(lul);}
+    // ------------------------------------------------------------------------
+    /**sets the target */
+    void setTarget(core::vector3df pos) {m_camera->setTarget(pos);}
+    // ------------------------------------------------------------------------
     /** Returns the camera index (or player kart index, which is the same). */
     int  getIndex() const  {return m_index;}
     // ------------------------------------------------------------------------
     /** Returns the project-view matrix of the previous frame. */
     core::matrix4 getPreviousPVMatrix() const { return m_previous_pv_matrix; }
-
+    // ------------------------------------------------------------------------
+    /** returns the target*/
+    core::vector3df getTarget() {return m_camera->getTarget();}
     // ------------------------------------------------------------------------
     /** Returns the project-view matrix of the previous frame. */
     void setPreviousPVMatrix(core::matrix4 mat) { m_previous_pv_matrix = mat; }
@@ -224,6 +235,9 @@ public:
     // ------------------------------------------------------------------------
     /** Returs the absolute position of the camera. */
     Vec3 getXYZ() { return Vec3(m_camera->getPosition()); }
+    // ------------------------------------------------------------------------
+    /**Updates the absolute position */
+    void updateAbsolutePosition() {m_camera->updateAbsolutePosition();}
 };   // class Camera
 
 #endif
