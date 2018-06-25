@@ -240,6 +240,18 @@ void CCameraSceneNode::OnRegisterSceneNode()
 	ISceneNode::OnRegisterSceneNode();
 }
 
+//! camera shift setter method
+void CCameraSceneNode::setShift(float scale) {
+	core::vector3df pos = getAbsolutePosition();
+	core::vector3df tgtv = Target - pos;
+	tgtv.normalize();
+	core::vector3df up = UpVector;
+  up.normalize();
+	core::vector3df ortho = tgtv.crossProduct(up);
+	ortho.normalize();
+	pos = pos + operator*(scale,ortho);
+	setAbsolutePosition(pos);
+}
 
 //! render
 void CCameraSceneNode::render()
@@ -378,6 +390,7 @@ ISceneNode* CCameraSceneNode::clone(ISceneNode* newParent, ISceneManager* newMan
 		nb->drop();
 	return nb;
 }
+CCameraSceneNode::~CCameraSceneNode(){};
 
 
 } // end namespace
