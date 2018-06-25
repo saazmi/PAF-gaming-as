@@ -499,7 +499,7 @@ namespace scene
 			return RelativeTranslation;
 		}
 
-
+		
 		//! Sets the position of the node relative to its parent.
 		/** Note that the position is relative to the parent.
 		\param newpos New relative position of the scene node. */
@@ -522,8 +522,11 @@ namespace scene
 		{
 			return AbsoluteTransformation.getTranslation();
 		}
-
-
+		/** Created to shift the camera node*/
+		virtual void setAbsolutePosition(core::vector3df& pos) {
+			AbsoluteTransformation.setTranslation(pos);
+		}
+	
 		//! Enables or disables automatic culling based on the bounding box.
 		/** Automatic culling is enabled by default. Note that not
 		all SceneNodes support culling and that some nodes always cull
