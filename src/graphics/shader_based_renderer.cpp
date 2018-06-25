@@ -45,6 +45,7 @@
 #include "tracks/track.hpp"
 #include "utils/profiler.hpp"
 
+#include "../../lib/irrlicht/source/Irrlicht/CCameraSceneNode.h"
 #include "../../lib/irrlicht/source/Irrlicht/CSceneManager.h"
 #include "../../lib/irrlicht/source/Irrlicht/os.h"
 #include <algorithm>
@@ -777,13 +778,17 @@ void ShaderBasedRenderer::render(float dt)
         SP::sp_cur_buf_id[cam] = (SP::sp_cur_buf_id[cam] + 1) % 3;
         Camera * const camera = Camera::getCamera(cam);
         scene::ICameraSceneNode * const camnode = camera->getCameraSceneNode();
-
+	//debut exemple decalage
+	    if (cam%2==0){
+          camnode->setShift(+0.5);}
+          else if (cam%2==1){camnode->setShift(-0.5);}
+	// fin exemple 
         renderTarget = views_tx_objects[2*(cam)+i];
         renderTarget->renderToTexture(camnode,dt);
   //        GLuint texture_cam_i = renderTarget->getTexture();
 
 
-/*
+
         std::ostringstream oss;
         oss << "drawAll() for kart " << cam;
         PROFILER_PUSH_CPU_MARKER(oss.str().c_str(), (cam+1)*60,
@@ -816,13 +821,13 @@ void ShaderBasedRenderer::render(float dt)
         {
             renderPostProcessing(camera, cam == 0);//cam == 1 affiche que la vue du joueur 2
         }
-*/
+
         // Save projection-view matrix for the next frame
         camera->setPreviousPVMatrix(irr_driver->getProjViewMatrix());
 
         PROFILER_POP_CPU_MARKER();
     //  }
-  }
+ // }
     //irr::video::SColor& colors=irr::video::SColor(0,255,255,255);
 
 
@@ -850,7 +855,8 @@ void ShaderBasedRenderer::render(float dt)
                                     (float)irr_driver->getActualScreenSize().Height);
 
     for(unsigned int i=0; i<Camera::getNumCameras(); i++)
-    {
+    {*/
+    /// à là (màj sami)
         Camera *camera = Camera::getCamera(i);
         std::ostringstream oss;
         oss << "renderPlayerView() for kart " << i;
@@ -859,7 +865,7 @@ void ShaderBasedRenderer::render(float dt)
         rg->renderPlayerView(camera, dt);
 
         PROFILER_POP_CPU_MARKER();
-    }  // for i<getNumKarts
+   // }  // for i<getNumKarts
 
     {
         ScopedGPUTimer Timer(irr_driver->getGPUTimer(Q_GUI));
@@ -878,10 +884,7 @@ void ShaderBasedRenderer::render(float dt)
 #ifdef DEBUG
     drawDebugMeshes();
 #endif
-*/
 
-
-/// ... à là
 
     if (UserConfigParams::m_nb_views >1 ) {
 
