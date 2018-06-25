@@ -153,7 +153,9 @@ namespace scene
 			_IRR_IMPLEMENT_MANAGED_MARSHALLING_BUGFIX;
 			return IsOrthogonal;
 		}
-
+		//! Sets cameranode shift
+		/** \param scale : norme + sens du vecteur de decalage*/
+		virtual void setShift(float scale) =0;	
 		//! Binds the camera scene node's rotation to its target position and vice vera, or unbinds them.
 		/** When bound, calling setRotation() will update the camera's
 		target position to be along its +Z axis, and likewise calling
