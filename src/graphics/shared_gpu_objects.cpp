@@ -31,9 +31,6 @@ GLuint SharedGPUObjects::m_full_screen_quad_vao;
 GLuint SharedGPUObjects::m_ui_vao;
 GLuint SharedGPUObjects::m_quad_buffer;
 GLuint SharedGPUObjects::m_quad_vbo;
-//test de Warren
-GLuint SharedGPUObjects::m_test_ui_vao;
-GLuint SharedGPUObjects::m_test_quad_buffer;
 bool   SharedGPUObjects::m_has_been_initialised = false;
 
 #include "matrix4.h"
@@ -102,33 +99,6 @@ void SharedGPUObjects::initQuadBuffer()
     glBindVertexArray(0);
 }   // initQuadBuffer
 
-//test de Warren
-// ----------------------------------------------------------------------------
-void SharedGPUObjects::initTestVAO()
-{
-    const float QUAD_VERTEX[] =
-    {
-        -1., -1., -1.,  1.,   // UpperLeft
-        -1.,  1., -1., -1.,   // LowerLeft
-         1., -1.,  1.,  1.,   // UpperRight
-         1.,  1.,  1., -1.    // LowerRight
-    };
-    glGenBuffers(1, &m_test_quad_buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, m_test_quad_buffer);
-    glBufferData(GL_ARRAY_BUFFER, 16 * sizeof(float), QUAD_VERTEX,
-        GL_STATIC_DRAW);
-
-    glGenVertexArrays(1, &m_test_ui_vao);
-    glBindVertexArray(m_test_ui_vao);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(3);
-    glBindBuffer(GL_ARRAY_BUFFER, m_test_quad_buffer);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
-                          (GLvoid *)(2 * sizeof(float)));
-    glBindVertexArray(0);
-}
-
 // ----------------------------------------------------------------------------
 void SharedGPUObjects::initSkyTriVBO()
 {
@@ -194,8 +164,6 @@ void SharedGPUObjects::init()
     initQuadBuffer();
     initSkyTriVBO();
     initFrustrumVBO();
-    //test de Warren
-    initTestVAO();
     if (CVS->isARBUniformBufferObjectUsable())
     {
         initShadowVPMUBO();
