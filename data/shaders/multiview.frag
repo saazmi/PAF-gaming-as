@@ -15,7 +15,7 @@ out vec4 FragColor;
 
 void main()
 {
-	FragColor = texture2D(texture2, uv);
+	FragColor = texture2D(texture2, vec2(0.5*(1.+uv.s), .5*(1.0-uv.t)));
 }
 
 #else
