@@ -11,11 +11,41 @@ uniform float height;
 in vec2 uv;
 out vec4 FragColor;
 
-#if 1
+#if 0
 
 void main()
 {
-	FragColor = texture2D(texture2, vec2(0.5*(1.+uv.s), .5*(1.0-uv.t)));
+#if 1
+vec2 tx_coord;
+tx_coord = vec2(0.5*(1.+uv.s), 0.5*(1.0-uv.t));
+
+
+
+int x = int(gl_FragCoord.x + 0.5);
+int y = int(gl_FragCoord.y + 0.5);
+int moduloy = y/2;
+moduloy = y - moduloy*2;
+
+int modulox = x/2;
+modulox = x - modulox*2;
+
+if (modulox==1) {
+	if (moduloy==1) {
+		FragColor = texture2D(texture3, tx_coord);
+	} else {
+		FragColor = texture2D(texture2, tx_coord);
+	}
+} else {
+	if (moduloy==1) {
+ 		FragColor = texture2D(texture6, tx_coord);
+ 	} else {
+ 		FragColor = texture2D(texture7, tx_coord);
+ 	}
+ }
+
+ #else
+ 	FragColor = texture2D(texture2, vec2(0.5*(1.+uv.s), 0.5*(1.0-uv.t)));
+#endif
 }
 
 #else
@@ -25,12 +55,9 @@ void main()
 	vec2 tx_coord;
 	vec4 col2, col3, col6, col7, res;
 
-	tx_coord = uv;
+	tx_coord = vec2(0.5*(1.+uv.s), 0.5*(1.0-uv.t));
 
 
-	//simple test on coordinates: get integer (pixel) position, compute their modulo 8. If same modulo draw black
-	//this will results in oblique black lines every 8 pixels, with a slope of 1/1 = 45 degree
-	//!! y=0 is bottom of the screen, x=0 is left
 
 	int x = int(gl_FragCoord.x + 0.5);
 	int y = int(gl_FragCoord.y + 0.5);
@@ -103,7 +130,7 @@ void main()
 
 
 
-	gl_FragColor = res;
+	FragColor = res;
 
 }
 

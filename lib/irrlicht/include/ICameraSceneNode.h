@@ -76,7 +76,7 @@ namespace scene
 		/** If the camera's target and rotation are bound ( @see
 		bindTargetAndRotation() ) then calling this will also change
 		the camera's scene node rotation to match the target.
-		Note that setTarget uses the current absolute position 
+		Note that setTarget uses the current absolute position
 		internally, so if you changed setPosition since last rendering you must
 		call updateAbsolutePosition before using this function.
 		\param pos Look at target of the camera, in world co-ordinates. */
@@ -155,7 +155,7 @@ namespace scene
 		}
 		//! Sets cameranode shift
 		/** \param scale : norme + sens du vecteur de decalage*/
-		virtual void setShift(float scale) =0;	
+		virtual void setShift(float scale) =0;
 		//! Binds the camera scene node's rotation to its target position and vice vera, or unbinds them.
 		/** When bound, calling setRotation() will update the camera's
 		target position to be along its +Z axis, and likewise calling
@@ -206,4 +206,3 @@ namespace scene
 } // end namespace irr
 
 #endif
-

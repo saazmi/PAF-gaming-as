@@ -183,10 +183,10 @@ namespace scene
 
 
 		//! Get the absolute transformation of the node. Is recalculated every OnAnimate()-call.
-		/** NOTE: For speed reasons the absolute transformation is not 
-		automatically recalculated on each change of the relative 
+		/** NOTE: For speed reasons the absolute transformation is not
+		automatically recalculated on each change of the relative
 		transformation or by a transformation change of an parent. Instead the
-		update usually happens once per frame in OnAnimate. You can enforce 
+		update usually happens once per frame in OnAnimate. You can enforce
 		an update with updateAbsolutePosition().
 		\return The absolute transformation matrix. */
 		virtual const core::matrix4& getAbsoluteTransformation() const
@@ -499,7 +499,7 @@ namespace scene
 			return RelativeTranslation;
 		}
 
-		
+
 		//! Sets the position of the node relative to its parent.
 		/** Note that the position is relative to the parent.
 		\param newpos New relative position of the scene node. */
@@ -512,10 +512,10 @@ namespace scene
 		//! Gets the absolute position of the node in world coordinates.
 		/** If you want the position of the node relative to its parent,
 		use getPosition() instead.
-		NOTE: For speed reasons the absolute position is not 
-		automatically recalculated on each change of the relative 
-		position or by a position change of an parent. Instead the 
-		update usually happens once per frame in OnAnimate. You can enforce 
+		NOTE: For speed reasons the absolute position is not
+		automatically recalculated on each change of the relative
+		position or by a position change of an parent. Instead the
+		update usually happens once per frame in OnAnimate. You can enforce
 		an update with updateAbsolutePosition().
 		\return The current absolute position of the scene node (updated on last call of updateAbsolutePosition). */
 		virtual core::vector3df getAbsolutePosition() const
@@ -523,10 +523,10 @@ namespace scene
 			return AbsoluteTransformation.getTranslation();
 		}
 		/** Created to shift the camera node*/
-		virtual void setAbsolutePosition(core::vector3df& pos) {
+		virtual void setAbsolutePosition(const core::vector3df& pos) {
 			AbsoluteTransformation.setTranslation(pos);
 		}
-	
+
 		//! Enables or disables automatic culling based on the bounding box.
 		/** Automatic culling is enabled by default. Note that not
 		all SceneNodes support culling and that some nodes always cull
@@ -863,4 +863,3 @@ namespace scene
 } // end namespace irr
 
 #endif
-

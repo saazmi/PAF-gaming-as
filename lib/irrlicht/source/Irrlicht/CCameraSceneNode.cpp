@@ -255,7 +255,7 @@ void CCameraSceneNode::setShift(float scale) {
 
 //! render
 void CCameraSceneNode::render()
-{
+{	
 	core::vector3df pos = getAbsolutePosition();
 	core::vector3df tgtv = Target - pos;
 	tgtv.normalize();
@@ -264,7 +264,6 @@ void CCameraSceneNode::render()
 	// problem. so solve this problem:
 	core::vector3df up = UpVector;
 	up.normalize();
-
 	f32 dp = tgtv.dotProduct(up);
 
 	if ( core::equals(core::abs_<f32>(dp), 1.f) )
@@ -395,4 +394,3 @@ CCameraSceneNode::~CCameraSceneNode(){};
 
 } // end namespace
 } // end namespace
-

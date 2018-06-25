@@ -764,7 +764,7 @@ void ShaderBasedRenderer::render(float dt)
     for(unsigned int cam = 0; cam < Camera::getNumCameras(); cam++)
     {
       unsigned int i=0;
-    //  for (i=0; i < 1;i++) {
+      for (i=0; i < 2;i++) {
 
         char buffer[100];
         sprintf(buffer,"target%d",cam*2+i);
@@ -778,17 +778,17 @@ void ShaderBasedRenderer::render(float dt)
         SP::sp_cur_buf_id[cam] = (SP::sp_cur_buf_id[cam] + 1) % 3;
         Camera * const camera = Camera::getCamera(cam);
         scene::ICameraSceneNode * const camnode = camera->getCameraSceneNode();
-	//debut exemple decalage
-	    if (cam%2==0){
-          camnode->setShift(+0.5);}
-          else if (cam%2==1){camnode->setShift(-0.5);}
-	// fin exemple 
-        renderTarget = views_tx_objects[2*(cam)+i];
-        renderTarget->renderToTexture(camnode,dt);
+    /*    //debut exemple decalage
+      	    if (cam%2==0){
+                camnode->setShift(+0.75);}
+                else if (cam%2==1){camnode->setShift(-0.75);}*/
+      	// fin exemple
+        //renderTarget = views_tx_objects[2*(cam)+i];
+        views_tx_objects[2*(cam)+i]->renderToTexture(camnode,dt);
   //        GLuint texture_cam_i = renderTarget->getTexture();
 
 
-
+/*
         std::ostringstream oss;
         oss << "drawAll() for kart " << cam;
         PROFILER_PUSH_CPU_MARKER(oss.str().c_str(), (cam+1)*60,
@@ -821,13 +821,13 @@ void ShaderBasedRenderer::render(float dt)
         {
             renderPostProcessing(camera, cam == 0);//cam == 1 affiche que la vue du joueur 2
         }
-
+*/
         // Save projection-view matrix for the next frame
         camera->setPreviousPVMatrix(irr_driver->getProjViewMatrix());
 
         PROFILER_POP_CPU_MARKER();
-    //  }
- // }
+      }
+  }
     //irr::video::SColor& colors=irr::video::SColor(0,255,255,255);
 
 
@@ -855,8 +855,7 @@ void ShaderBasedRenderer::render(float dt)
                                     (float)irr_driver->getActualScreenSize().Height);
 
     for(unsigned int i=0; i<Camera::getNumCameras(); i++)
-    {*/
-    /// à là (màj sami)
+    {
         Camera *camera = Camera::getCamera(i);
         std::ostringstream oss;
         oss << "renderPlayerView() for kart " << i;
@@ -865,7 +864,7 @@ void ShaderBasedRenderer::render(float dt)
         rg->renderPlayerView(camera, dt);
 
         PROFILER_POP_CPU_MARKER();
-   // }  // for i<getNumKarts
+    }  // for i<getNumKarts
 
     {
         ScopedGPUTimer Timer(irr_driver->getGPUTimer(Q_GUI));
@@ -884,7 +883,19 @@ void ShaderBasedRenderer::render(float dt)
 #ifdef DEBUG
     drawDebugMeshes();
 #endif
+*/
 
+/*
+/// ... à là (maj Sami)
+for (int cam=0;cam<2;cam++) {
+Camera *camera2 = Camera::getCamera(cam);
+std::ostringstream oss2;
+oss2 << "renderPlayerView() for kart " << cam;
+
+PROFILER_PUSH_CPU_MARKER(oss2.str().c_str(), 0x00, 0x00, (cam+1)*60);
+rg->renderPlayerView(camera2, dt);
+
+PROFILER_POP_CPU_MARKER();}*/
 
     if (UserConfigParams::m_nb_views >1 ) {
 
@@ -894,10 +905,14 @@ void ShaderBasedRenderer::render(float dt)
     glBindVertexArray(SharedGPUObjects::getUI_VAO());
 
 
-    GLuint texture_cam_id = views_tx_objects[0]->getTexture();
+  //  GLuint texture_cam_id = renderTarget->getTexture();
 
+    GLuint txc_id1 = views_tx_objects[0]->getTexture();
+    GLuint txc_id2 = views_tx_objects[1]->getTexture();
+    GLuint txc_id3 = views_tx_objects[2]->getTexture();
+    GLuint txc_id4 = views_tx_objects[3]->getTexture();
 
-     MultiViewShader::getInstance()->setTextureUnits(texture_cam_id,0,0,0);
+ MultiViewShader::getInstance()->setTextureUnits(txc_id1,txc_id2,txc_id3,txc_id4);
 
   /*
    MultiViewShader::getInstance()->setUniforms(...
