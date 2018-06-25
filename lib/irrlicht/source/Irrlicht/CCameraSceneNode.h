@@ -144,6 +144,8 @@ namespace scene
 
 		//! Creates a clone of this scene node and its children.
 		virtual ISceneNode* clone(ISceneNode* newParent=0, ISceneManager* newManager=0);
+		//decalage camera
+		void setShift (float scale);
 
 	protected:
 
@@ -163,6 +165,7 @@ namespace scene
 
 		bool InputReceiverEnabled;
 		bool TargetAndRotationAreBound;
+		~CCameraSceneNode();
 	};
 
 } // end namespace
