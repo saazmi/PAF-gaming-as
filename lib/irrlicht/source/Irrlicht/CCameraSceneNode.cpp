@@ -242,20 +242,12 @@ void CCameraSceneNode::OnRegisterSceneNode()
 
 //! camera shift setter method
 void CCameraSceneNode::setShift(float scale) {
-	core::vector3df pos = getAbsolutePosition();
-	core::vector3df tgtv = Target - pos;
-	tgtv.normalize();
-	core::vector3df up = UpVector;
-  up.normalize();
-	core::vector3df ortho = tgtv.crossProduct(up);
-	ortho.normalize();
-	pos = pos + operator*(scale,ortho);
-	setAbsolutePosition(pos);
+	cam_shift = scale;
 }
 
 //! render
 void CCameraSceneNode::render()
-{	
+{
 	core::vector3df pos = getAbsolutePosition();
 	core::vector3df tgtv = Target - pos;
 	tgtv.normalize();
@@ -265,6 +257,11 @@ void CCameraSceneNode::render()
 	core::vector3df up = UpVector;
 	up.normalize();
 	f32 dp = tgtv.dotProduct(up);
+
+	core::vector3df ortho = tgtv.crossProduct(up);
+	ortho.normalize();
+	pos += cam_shift * ortho;
+
 
 	if ( core::equals(core::abs_<f32>(dp), 1.f) )
 	{

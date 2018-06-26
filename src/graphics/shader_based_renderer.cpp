@@ -756,14 +756,15 @@ void ShaderBasedRenderer::render(float dt)
         PROFILER_POP_CPU_MARKER();
     }
 
-    GL3RenderTarget * renderTarget;
+    //GL3RenderTarget * renderTarget;
     assert(Camera::getNumCameras() < MAX_PLAYER_COUNT + 1);
 
 
     ///LA BOUCLE !!! THE ONE !!!!!
+
     for(unsigned int cam = 0; cam < Camera::getNumCameras(); cam++)
     {
-      unsigned int i=0;
+      unsigned int i;
       for (i=0; i < 2;i++) {
 
         char buffer[100];
@@ -777,14 +778,35 @@ void ShaderBasedRenderer::render(float dt)
         SP::sp_cur_player = cam;
         SP::sp_cur_buf_id[cam] = (SP::sp_cur_buf_id[cam] + 1) % 3;
         Camera * const camera = Camera::getCamera(cam);
-        scene::ICameraSceneNode * const camnode = camera->getCameraSceneNode();
+        scene::ICameraSceneNode * camnode = camera->getCameraSceneNode();
+
+        camera->activate(!CVS->isDeferredEnabled());
+        rg->preRenderCallback(camera);   // adjusts start referee (feu rouge, vert...)
+        //std::ostringstream oss;
+
+
+        if (i==0) {
+        camnode->setShift(-0.25);}
+        else {camnode->setShift(0.25);}
+        irr_driver->getSceneManager()->setActiveCamera(camnode);
+        computeMatrixesAndCameras(camnode, m_rtts->getWidth(), m_rtts->getHeight());
+
+        // Save projection-view matrix for the next frame
+        camera->setPreviousPVMatrix(irr_driver->getProjViewMatrix());
+
+
+
     /*    //debut exemple decalage
       	    if (cam%2==0){
                 camnode->setShift(+0.75);}
                 else if (cam%2==1){camnode->setShift(-0.75);}*/
       	// fin exemple
         //renderTarget = views_tx_objects[2*(cam)+i];
+
+
         views_tx_objects[2*(cam)+i]->renderToTexture(camnode,dt);
+
+
   //        GLuint texture_cam_i = renderTarget->getTexture();
 
 
@@ -822,29 +844,20 @@ void ShaderBasedRenderer::render(float dt)
             renderPostProcessing(camera, cam == 0);//cam == 1 affiche que la vue du joueur 2
         }
 */
-        // Save projection-view matrix for the next frame
-        camera->setPreviousPVMatrix(irr_driver->getProjViewMatrix());
-
-        PROFILER_POP_CPU_MARKER();
+}
       }
-  }
-    //irr::video::SColor& colors=irr::video::SColor(0,255,255,255);
-
-
-  //  renderTarget->draw2DImage(dest,0,0,true)
-
-
+  //}
       // for i<world->getNumKarts()
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glUseProgram(0);
-//suppression des overlay avec les commentaire
-/*
+
+
 
 
 ///retire la grille d'info de là ...
-
+/*
     // Set the viewport back to the full screen for race gui
     irr_driver->getVideoDriver()->setViewPort(core::recti(0, 0,
         irr_driver->getActualScreenSize().Width,
@@ -856,12 +869,12 @@ void ShaderBasedRenderer::render(float dt)
 
     for(unsigned int i=0; i<Camera::getNumCameras(); i++)
     {
-        Camera *camera = Camera::getCamera(i);
-        std::ostringstream oss;
-        oss << "renderPlayerView() for kart " << i;
+        Camera *camera2 = Camera::getCamera(cam);
+        std::ostringstream oss2;
+        oss2 << "renderPlayerView() for kart " << cam;
 
-        PROFILER_PUSH_CPU_MARKER(oss.str().c_str(), 0x00, 0x00, (i+1)*60);
-        rg->renderPlayerView(camera, dt);
+        PROFILER_PUSH_CPU_MARKER(oss2.str().c_str(), 0x00, 0x00, (cam+1)*60);
+        rg->renderPlayerView(camera2, dt);
 
         PROFILER_POP_CPU_MARKER();
     }  // for i<getNumKarts
@@ -883,10 +896,11 @@ void ShaderBasedRenderer::render(float dt)
 #ifdef DEBUG
     drawDebugMeshes();
 #endif
-*/
 
-/*
+
+
 /// ... à là (maj Sami)
+/*
 for (int cam=0;cam<2;cam++) {
 Camera *camera2 = Camera::getCamera(cam);
 std::ostringstream oss2;
@@ -912,7 +926,7 @@ PROFILER_POP_CPU_MARKER();}*/
     GLuint txc_id3 = views_tx_objects[2]->getTexture();
     GLuint txc_id4 = views_tx_objects[3]->getTexture();
 
- MultiViewShader::getInstance()->setTextureUnits(txc_id1,txc_id2,txc_id3,txc_id4);
+ MultiViewShader::getInstance()->setTextureUnits(txc_id1,0,0,0);
 
   /*
    MultiViewShader::getInstance()->setUniforms(...
@@ -934,6 +948,7 @@ PROFILER_POP_CPU_MARKER();}*/
     PROFILER_POP_CPU_MARKER();
 
     m_post_processing->update(dt);
+    std::cout << irr_driver->getVideoDriver()->getFPS() << "current Framerate\n";
 } //render
 
 // ----------------------------------------------------------------------------
@@ -961,6 +976,7 @@ void ShaderBasedRenderer::renderToTexture(GL3RenderTarget *render_target,
     if (CVS->isARBUniformBufferObjectUsable())
         uploadLightingData();
 
+
     if (CVS->isDeferredEnabled())
     {
         renderSceneDeferred(camera, dt, false, true);
@@ -980,7 +996,7 @@ void ShaderBasedRenderer::renderToTexture(GL3RenderTarget *render_target,
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    irr_driver->getSceneManager()->setActiveCamera(NULL);
+    //irr_driver->getSceneManager()->setActiveCamera(NULL);
 
 } //renderToTexture
 

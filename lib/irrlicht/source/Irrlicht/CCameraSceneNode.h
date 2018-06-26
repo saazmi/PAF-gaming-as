@@ -162,6 +162,7 @@ namespace scene
 
 		SViewFrustum ViewArea;
 		core::matrix4 Affector;
+		float cam_shift;
 
 		bool InputReceiverEnabled;
 		bool TargetAndRotationAreBound;

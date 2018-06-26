@@ -1750,6 +1750,7 @@ void IrrDriver::displayFPS()
     if (max < fps) max = fps;
     if (low > kilotris) low = kilotris;
     if (high < kilotris) high = kilotris;
+    std::cout << fps << " current framerate\n";
 
     core::stringw fps_string;
 

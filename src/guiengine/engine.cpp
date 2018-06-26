@@ -807,14 +807,14 @@ namespace GUIEngine
     {
         return Private::small_font_height;
     }   // getSmallFontHeight
- 
+
     // ------------------------------------------------------------------------
     int getLargeFontHeight()
    {
 
         return Private::large_font_height;
     }   // getSmallFontHeight
-        
+
     // ------------------------------------------------------------------------
     void clear()
     {
@@ -1246,7 +1246,7 @@ namespace GUIEngine
         }
 
         // draw FPS if enabled
-        if ( UserConfigParams::m_display_fps ) irr_driver->displayFPS();
+        /*if ( UserConfigParams::m_display_fps )*/ irr_driver->displayFPS();
 
         g_driver->enableMaterial2D(false);
 
@@ -1365,15 +1365,15 @@ namespace GUIEngine
         if (ScreenKeyboard::isActive())
         {
             Widget* widget = ScreenKeyboard::getCurrent()->getWidget(name);
-            if (widget != NULL) 
+            if (widget != NULL)
                 return widget;
         }
-        
+
         // if a modal dialog is shown, search within it too
         if (ModalDialog::isADialogActive())
         {
             Widget* widget = ModalDialog::getCurrent()->getWidget(name);
-            if (widget != NULL) 
+            if (widget != NULL)
                 return widget;
         }
 
@@ -1390,15 +1390,15 @@ namespace GUIEngine
         if (ScreenKeyboard::isActive())
         {
             Widget* widget = ScreenKeyboard::getCurrent()->getWidget(id);
-            if (widget != NULL) 
+            if (widget != NULL)
                 return widget;
         }
-        
+
         // if a modal dialog is shown, search within it too
         if (ModalDialog::isADialogActive())
         {
             Widget* widget = ModalDialog::getCurrent()->getWidget(id);
-            if (widget != NULL) 
+            if (widget != NULL)
                 return widget;
         }
 

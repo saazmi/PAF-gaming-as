@@ -85,10 +85,10 @@ void main()
 
 	if (mod_r == 1){
 		col2 = texture2D(texture2, tx_coord);
-		col3 = texture2D(texture3, tx_coord);
+		//col3 = texture2D(texture3, tx_coord);
 
 		res.g = col2.g;
-		res.b = col3.b;
+		//res.b = col3.b;
 	}
 
 	if(mod_r == 2){
@@ -127,7 +127,6 @@ void main()
 		col7 = texture2D(texture7, tx_coord);
 		res.r = col7.r;
 	}
-
 
 
 	FragColor = res;
