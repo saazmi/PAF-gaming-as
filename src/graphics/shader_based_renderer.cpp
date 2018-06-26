@@ -900,7 +900,7 @@ void ShaderBasedRenderer::render(float dt)
 
 
 /// ... à là (maj Sami)
-/*
+
 for (int cam=0;cam<2;cam++) {
 Camera *camera2 = Camera::getCamera(cam);
 std::ostringstream oss2;
@@ -926,7 +926,7 @@ PROFILER_POP_CPU_MARKER();}*/
     GLuint txc_id3 = views_tx_objects[2]->getTexture();
     GLuint txc_id4 = views_tx_objects[3]->getTexture();
 
- MultiViewShader::getInstance()->setTextureUnits(txc_id1,0,0,0);
+ MultiViewShader::getInstance()->setTextureUnits(txc_id1,txc_id2,txc_id3,txc_id4);
 
   /*
    MultiViewShader::getInstance()->setUniforms(...
