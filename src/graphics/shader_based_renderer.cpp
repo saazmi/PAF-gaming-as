@@ -222,7 +222,7 @@ public:
 
 
 // ============================================================================
-class MultiViewShader: public TextureShader<MultiViewShader, 4 >
+class MultiViewShader: public TextureShader<MultiViewShader, 6 >
 {
 public:
 	MultiViewShader()
@@ -231,10 +231,12 @@ public:
                             GL_FRAGMENT_SHADER, "multiview.frag");
 /*        assignUniforms("bg_color");
 */
-        assignSamplerNames(0, "texture2", ST_NEAREST_FILTERED,
-                           1, "texture3", ST_NEAREST_FILTERED,
-                           2, "texture6", ST_NEAREST_FILTERED,
-                           3, "texture7", ST_NEAREST_FILTERED);
+        assignSamplerNames(0, "texture_j1g", ST_NEAREST_FILTERED,
+                           1, "texture_j1c", ST_NEAREST_FILTERED,
+                           2, "texture_j1d", ST_NEAREST_FILTERED,
+                           3, "texture_j2g", ST_NEAREST_FILTERED,
+                           4, "texture_j2c", ST_NEAREST_FILTERED,
+                           5, "texture_j2d", ST_NEAREST_FILTERED);
    }
 };   // MultiViewShader
 
@@ -765,13 +767,13 @@ void ShaderBasedRenderer::render(float dt)
     for(unsigned int cam = 0; cam < Camera::getNumCameras(); cam++)
     {
       unsigned int i;
-      for (i=0; i < 2;i++) {
+      for (i=0; i < 3;i++) {
 
         char buffer[100];
-        sprintf(buffer,"target%d",cam*2+i);
-        if (!views_tx_objects[2*(cam)+i])
+        sprintf(buffer,"target%d",cam*3+i);
+        if (!views_tx_objects[3*(cam)+i])
           {
-            views_tx_objects[2*(cam)+i]=new GL3RenderTarget(irr::core::dimension2du(m_rtts->getWidth(), m_rtts->getHeight()),buffer,this);
+            views_tx_objects[3*(cam)+i]=new GL3RenderTarget(irr::core::dimension2du(m_rtts->getWidth(), m_rtts->getHeight()),buffer,this);
           }
     //    GL3RenderTarget * renderTarget = createRenderTarget(irr::core::dimension2du(m_rtts->getWidth(), m_rtts->getHeight(),buffer);
       //  renderTarget=views_tx_objects[2*(cam)+i];
@@ -786,8 +788,8 @@ void ShaderBasedRenderer::render(float dt)
 
 
         if (i==0) {
-        camnode->setShift(-0.25);}
-        else {camnode->setShift(0.25);}
+        camnode->setShift(-0.125);}
+        else if (i==2){camnode->setShift(0.125);}
         irr_driver->getSceneManager()->setActiveCamera(camnode);
         computeMatrixesAndCameras(camnode, m_rtts->getWidth(), m_rtts->getHeight());
 
@@ -804,7 +806,7 @@ void ShaderBasedRenderer::render(float dt)
         //renderTarget = views_tx_objects[2*(cam)+i];
 
 
-        views_tx_objects[2*(cam)+i]->renderToTexture(camnode,dt);
+        views_tx_objects[3*(cam)+i]->renderToTexture(camnode,dt);
 
 
   //        GLuint texture_cam_i = renderTarget->getTexture();
@@ -925,6 +927,8 @@ PROFILER_POP_CPU_MARKER();}*/
     GLuint txc_id2 = views_tx_objects[1]->getTexture();
     GLuint txc_id3 = views_tx_objects[2]->getTexture();
     GLuint txc_id4 = views_tx_objects[3]->getTexture();
+    GLuint txc_id5 = views_tx_objects[4]->getTexture();
+    GLuint txc_id6 = views_tx_objects[5]->getTexture();
 
  MultiViewShader::getInstance()->setTextureUnits(txc_id1,txc_id2,txc_id3,txc_id4);
 
