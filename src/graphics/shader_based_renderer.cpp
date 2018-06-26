@@ -222,15 +222,17 @@ public:
 
 
 // ============================================================================
-class MultiViewShader: public TextureShader<MultiViewShader, 6 >
+class MultiViewShader: public TextureShader<MultiViewShader, 6, int, int >
 {
 public:
 	MultiViewShader()
     {
         loadProgram(OBJECT, GL_VERTEX_SHADER, "multiview.vert",
                             GL_FRAGMENT_SHADER, "multiview.frag");
-/*        assignUniforms("bg_color");
-*/
+        assignUniforms("bg_color","nb_views");
+
+
+
         assignSamplerNames(0, "texture_j1g", ST_NEAREST_FILTERED,
                            1, "texture_j1c", ST_NEAREST_FILTERED,
                            2, "texture_j1d", ST_NEAREST_FILTERED,
@@ -798,18 +800,10 @@ void ShaderBasedRenderer::render(float dt)
 
 
 
-    /*    //debut exemple decalage
-      	    if (cam%2==0){
-                camnode->setShift(+0.75);}
-                else if (cam%2==1){camnode->setShift(-0.75);}*/
-      	// fin exemple
-        //renderTarget = views_tx_objects[2*(cam)+i];
 
 
         views_tx_objects[3*(cam)+i]->renderToTexture(camnode,dt);
 
-
-  //        GLuint texture_cam_i = renderTarget->getTexture();
 
 
 /*

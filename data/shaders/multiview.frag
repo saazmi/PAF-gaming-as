@@ -1,4 +1,4 @@
-texture_j1guniform sampler2D texture_j1g;
+uniform sampler2D texture_j1g;
 uniform sampler2D texture_j1d;
 uniform sampler2D texture_j1c;
 
