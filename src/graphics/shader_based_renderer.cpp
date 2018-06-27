@@ -768,15 +768,15 @@ void ShaderBasedRenderer::render(float dt)
     ///LA BOUCLE !!! THE ONE !!!!!
     int nbviews = UserConfigParams::m_nb_views;
     if (nbviews > 1) {
-    	    
-	  	 int scaler=2;
+
+
     	unsigned int w = m_rtts->getWidth();
     	unsigned int h = m_rtts->getHeight();
-    	irr::core::dimension2du tx_dim(w/scaler, h/scaler);
-    	
+    	irr::core::dimension2du tx_dim(w/UserConfigParams::scaler, h/UserConfigParams::scaler);
+
     for(unsigned int cam = 0; cam < Camera::getNumCameras(); cam++)
     {
-    	
+
       int i;
       for (i=0; i < nbviews;i++) {
         char buffer[100];
@@ -796,14 +796,14 @@ void ShaderBasedRenderer::render(float dt)
 
 
         if (i==0) {
-        	camnode->setShift(-0.02);
+        	camnode->setShift(-UserConfigParams::cam_shift*(nbviews-1));
         }
         else if (i==nbviews-1){
-        		camnode->setShift(0.02);
+        		camnode->setShift(UserConfigParams::cam_shift*(nbviews-1));
         }
-        
+
         irr_driver->getSceneManager()->setActiveCamera(camnode);
-        computeMatrixesAndCameras(camnode, m_rtts->getWidth()/scaler, m_rtts->getHeight()/scaler);
+        computeMatrixesAndCameras(camnode, m_rtts->getWidth()/UserConfigParams::scaler, m_rtts->getHeight()/UserConfigParams::scaler);
 
         // Save projection-view matrix for the next frame
         camera->setPreviousPVMatrix(irr_driver->getProjViewMatrix());
@@ -811,9 +811,9 @@ void ShaderBasedRenderer::render(float dt)
         views_tx_objects[nbviews*(cam)+i]->renderToTexture(camnode,dt);
       }//end multiview loop
     }//end camera loop
-    
+
     } else {
-    	
+
         for(unsigned int cam = 0; cam < Camera::getNumCameras(); cam++)
         {
           std::ostringstream oss;
@@ -924,8 +924,8 @@ PROFILER_POP_CPU_MARKER();}*/
     MultiViewShader::getInstance()->setUniforms(UserConfigParams::m_nb_views);
 
     glBindVertexArray(SharedGPUObjects::getUI_VAO());
-    
-    
+
+
     GLuint txc_id0,txc_id1,txc_id2,txc_id3,txc_id4,txc_id5;
 
     if (UserConfigParams::m_nb_views==2) {

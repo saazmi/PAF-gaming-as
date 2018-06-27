@@ -140,15 +140,15 @@ public:
     }
     std::map<T, U>& operator=(const std::map<T,U>& v)
     {
-        m_elements = std::map<T, U>(v); 
+        m_elements = std::map<T, U>(v);
         return m_elements;
     }
     std::map<T, U>& operator=(const MapUserConfigParam& v)
     {
-        m_elements = std::map<T,U>(v); 
+        m_elements = std::map<T,U>(v);
         return m_elements;
     }
-    U& operator[] (const T key) 
+    U& operator[] (const T key)
     {
         return m_elements[key];
     }
@@ -388,7 +388,7 @@ namespace UserConfigParams
     PARAM_PREFIX StringUserConfigParam m_last_used_kart_group
             PARAM_DEFAULT( StringUserConfigParam("all", "last_kart_group",
                                                  "Last selected kart group") );
-    
+
     // ---- Wiimote data
     PARAM_PREFIX GroupUserConfigParam        m_wiimote_group
         PARAM_DEFAULT( GroupUserConfigParam("WiiMote",
@@ -427,7 +427,7 @@ namespace UserConfigParams
             PARAM_DEFAULT( BoolUserConfigParam(false, "multitouch_enabled",
             &m_multitouch_group,
             "Enable multitouch support.") );
-            
+
     PARAM_PREFIX IntUserConfigParam         m_multitouch_mode
             PARAM_DEFAULT( IntUserConfigParam(1, "multitouch_mode",
             &m_multitouch_group,
@@ -454,7 +454,7 @@ namespace UserConfigParams
             &m_multitouch_group,
             "A parameter in range [0, 0.5] that determines the zone that is "
             "considered as max value in steering button."));
-            
+
     PARAM_PREFIX FloatUserConfigParam         m_multitouch_tilt_factor
             PARAM_DEFAULT( FloatUserConfigParam(4.0f, "multitouch_tilt_factor",
             &m_multitouch_group,
@@ -470,7 +470,7 @@ namespace UserConfigParams
             PARAM_DEFAULT( BoolUserConfigParam(false, "screen_keyboard",
             &m_multitouch_group,
             "Enable screen keyboard.") );
-            
+
     PARAM_PREFIX BoolUserConfigParam         m_hidpi_enabled
             PARAM_DEFAULT( BoolUserConfigParam(false, "hidpi_enabled",
             &m_multitouch_group,
@@ -582,7 +582,7 @@ namespace UserConfigParams
         PARAM_DEFAULT(BoolUserConfigParam(false, "hq_mipmap",
         &m_video_group, "Generate mipmap for textures using "
                         "high quality method with SSE"));
-                        
+
     // ---- Recording
     PARAM_PREFIX GroupUserConfigParam        m_recording_group
         PARAM_DEFAULT(GroupUserConfigParam("Recording",
@@ -684,6 +684,10 @@ namespace UserConfigParams
     PARAM_PREFIX float m_profiler_buffer_duration PARAM_DEFAULT(20.0f);
 
     PARAM_PREFIX int m_nb_views PARAM_DEFAULT(1);
+
+    PARAM_PREFIX int scaler PARAM_DEFAULT(1);
+
+    PARAM_PREFIX float cam_shift PARAM_DEFAULT(0.0);
 
     // ---- Networking
     PARAM_PREFIX StringToUIntUserConfigParam m_stun_list
@@ -996,7 +1000,7 @@ namespace UserConfigParams
     PARAM_PREFIX BoolUserConfigParam        m_everything_unlocked
             PARAM_DEFAULT( BoolUserConfigParam(false, "everything_unlocked",
                                "Enable all karts and tracks") );
-                               
+
     PARAM_PREFIX StringUserConfigParam      m_commandline
             PARAM_DEFAULT( StringUserConfigParam("", "commandline",
                              "Allows to set commandline args in config file") );

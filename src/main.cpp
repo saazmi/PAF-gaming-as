@@ -72,11 +72,11 @@
  online_manager -> "STK Server"
  "STK Server" -> online_manager
  karts -> replay
- replay 
+ replay
  # force karts and tracks on the same level, looks better this way
- subgraph { 
-  rank = same; karts; tracks; 
- } 
+ subgraph {
+  rank = same; karts; tracks;
+ }
 
 }
  \enddot
@@ -316,7 +316,7 @@ void gamepadVisualisation()
 
                     if (evt.PressedDown)
                     {
-                        if (evt.Key == IRR_KEY_RETURN || 
+                        if (evt.Key == IRR_KEY_RETURN ||
                             evt.Key == IRR_KEY_ESCAPE ||
                             evt.Key == IRR_KEY_SPACE)
                         {
@@ -876,6 +876,22 @@ int handleCmdLinePreliminary()
             UserConfigParams::m_nb_views = nb_views;
 
         }
+    }
+
+    if (CommandLine::has("scaler",&s))
+    {
+      int sscaler=1;
+      if (sscanf(s.c_str(),"%d", &sscaler)==1) {
+        UserConfigParams::scaler = sscaler;
+      }
+    }
+
+    if (CommandLine::has("shift",&s))
+    {
+      float shift=0.0;
+      if (sscanf(s.c_str(),"%f",&shift)==1) {
+        UserConfigParams::cam_shift=shift;
+      }
     }
 
     // Enable loading grand prix from local directory
@@ -1450,17 +1466,17 @@ int handleCmdLine()
             race_manager->setNumLaps(n);
         }
     }   // --profile-laps
-    
+
     if(CommandLine::has("--unlock-all"))
     {
         UserConfigParams::m_everything_unlocked = true;
     } // --unlock-all
-    
+
     if(CommandLine::has("--no-unlock-all"))
     {
         UserConfigParams::m_everything_unlocked = false;
     } // --no-unlock-all
-    
+
     if(CommandLine::has("--profile-time",  &n))
     {
         Log::verbose("main", "Profiling: %d seconds.", n);
@@ -1749,7 +1765,7 @@ int main(int argc, char *argv[] )
         // handle all command line options that do not need (or must
         // not have) other managers initialised:
         initUserConfig();
-        
+
         CommandLine::addArgsFromUserConfig();
 
         handleCmdLinePreliminary();
@@ -1873,13 +1889,13 @@ int main(int argc, char *argv[] )
                 }
                 Log::warn("main", "Screen size is too small!");
             }
-            
+
             #ifdef ANDROID
             if (UserConfigParams::m_multitouch_controls == 0)
             {
                 int32_t touch = AConfiguration_getTouchscreen(
                                                     global_android_app->config);
-                
+
                 if (touch != ACONFIGURATION_TOUCHSCREEN_NOTOUCH)
                 {
                     InitAndroidDialog* init_android = new InitAndroidDialog(
@@ -1917,7 +1933,7 @@ int main(int argc, char *argv[] )
                                             "too old. Please verify if an "
                                             "update for your video driver is "
                                             "available. SuperTuxKart requires "
-                                            "%s or better.", version), 
+                                            "%s or better.", version),
                                             /*from queue*/ true);
                     GUIEngine::DialogQueue::get()->pushDialog(dialog);
                 }
