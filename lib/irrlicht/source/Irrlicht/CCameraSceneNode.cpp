@@ -249,7 +249,8 @@ void CCameraSceneNode::setShift(float scale) {
 void CCameraSceneNode::render()
 {
 	core::vector3df pos = getAbsolutePosition();
-	core::vector3df tgtv = Target - pos;
+	core::vector3df tgtv = 0.5*ZFar*Target - pos;
+	float dist = tgtv.getLength();
 	tgtv.normalize();
 
 	// if upvector and vector to the target are the same, we have a
