@@ -6,7 +6,7 @@ uniform sampler2D texture_j2g;
 uniform sampler2D texture_j2d;
 uniform sampler2D texture_j2c;
 
-uniform int nb_views;
+uniform int nbviews;
 
 uniform float width;
 uniform float height;
@@ -42,7 +42,7 @@ void main()
 	mod_r = view_r - mod_r*8;
 
 
-if (nb_views == 3){
+/*if (nbviews == 3){
 //choix des vues pour chaque pixel
 	if (mod_r == 0) {
 		col2 = texture2D(texture_j1g, tx_coord);
@@ -103,64 +103,62 @@ if (nb_views == 3){
 		col8 = texture2D(texture_j2d, tx_coord);
 		res.g = col8.g;
 	}
-	}
 
-	else if (nb_views==2){
+}*/
+
+//	else if (nbviews==2){
 	//choix des vues pour chaque pixel
-		if (mod_r == 0) {
-			col7 = texture2D(texture_j2d, tx_coord);
-			res.r = col7.r;
-		}
-
-		if (mod_r == 1){
-			col2 = texture2D(texture_j1g, tx_coord);
-			res.b = col2.b;
-		}
-
-		if(mod_r == 2){
-			col2 = texture2D(texture_j1g, tx_coord);
-			col3 = texture2D(texture_j1d, tx_coord);
-
-			res.b = col3.b;
-			res.g = col2.g;
-		}
-
-		if(mod_r == 3){
-			col2 = texture2D(texture_j1g, tx_coord);
-			col3 = texture2D(texture_j1d, tx_coord);
-
-			res.g = col3.g;
-			res.r = col2.r;
-		}
-
-		if(mod_r == 4){
-			col3 = texture2D(texture_j1d, tx_coord);
-			res.r = col3.r;
-		}
-
-		if(mod_r == 5){
-			col6 = texture2D(texture_j2g, tx_coord);
-			res.b = col6.b;
-		}
-
-		if(mod_r == 6){
-			col6 = texture2D(texture_j2g, tx_coord);
-			col7 = texture2D(ev, tx_coord);
-			res.b = col7.b;
-			res.g = col6.g;
-		}
-
-		if(mod_r == 7){
-			col6 = texture2D(texture_j2g, tx_coord);
-			col7 = texture2D(texture_j2d, tx_coord);
-			res.g = col7.g;
-			res.r = col6.r;
-		}
-
-
-
-
+	if (mod_r == 0) {
+		col2 = texture2D(texture_j1g, tx_coord);
+		res.b = col2.b;
 	}
+
+	if (mod_r == 1){
+		col2 = texture2D(texture_j1g, tx_coord);
+		//col3 = texture2D(texture_j1d, tx_coord);
+
+		res.g = col2.g;
+		//res.b = col3.b;
+	}
+
+	if(mod_r == 2){
+	col2 = texture2D(texture_j1g, tx_coord);
+	col3 = texture2D(texture_j1d, tx_coord);
+
+	res.r = col2.r;
+	res.g = col3.g;
+	}
+
+	if(mod_r == 3){
+		col3 = texture2D(texture_j1d, tx_coord);
+		res.r = col3.r;
+	}
+
+	if(mod_r == 4){
+		col6 = texture2D(texture_j2g, tx_coord);
+		res.b = col6.b;
+	}
+
+	if(mod_r == 5){
+		col6 = texture2D(texture_j2g, tx_coord);
+		col7 = texture2D(texture_j2d, tx_coord);
+		res.g = col6.g;
+		res.b = col7.b;
+	}
+
+	if(mod_r == 6){
+		col6 = texture2D(texture_j2g, tx_coord);
+		col7 = texture2D(texture_j2d, tx_coord);
+		res.r = col6.r;
+		res.g = col7.g;
+	}
+
+	if(mod_r == 7){
+		col7 = texture2D(texture_j2d, tx_coord);
+		res.r = col7.r;
+}
+
+//}
 
 
 	FragColor = res;

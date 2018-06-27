@@ -222,14 +222,14 @@ public:
 
 
 // ============================================================================
-class MultiViewShader: public TextureShader<MultiViewShader, 6, int, int >
+class MultiViewShader: public TextureShader<MultiViewShader, 6, int >
 {
 public:
 	MultiViewShader()
     {
         loadProgram(OBJECT, GL_VERTEX_SHADER, "multiview.vert",
                             GL_FRAGMENT_SHADER, "multiview.frag");
-        assignUniforms("bg_color","nb_views");
+        assignUniforms("nbviews");
 
 
 
@@ -742,6 +742,7 @@ void ShaderBasedRenderer::render(float dt)
     // because of tracks that do not have skyboxes (generally add-on tracks)
     m_post_processing->begin();
 
+
     World *world = World::getWorld(); // Never NULL.
     Track *track = Track::getCurrentTrack();
 
@@ -765,20 +766,18 @@ void ShaderBasedRenderer::render(float dt)
 
 
     ///LA BOUCLE !!! THE ONE !!!!!
-
+    int nbviews=UserConfigParams::m_nb_views;
     for(unsigned int cam = 0; cam < Camera::getNumCameras(); cam++)
     {
-      unsigned int i;
-      for (i=0; i < 3;i++) {
+      int i;
+      for (i=0; i < nbviews;i++) {
 
         char buffer[100];
-        sprintf(buffer,"target%d",cam*3+i);
-        if (!views_tx_objects[3*(cam)+i])
+        sprintf(buffer,"target%d",cam*nbviews+i);
+        if (!views_tx_objects[nbviews*(cam)+i])
           {
-            views_tx_objects[3*(cam)+i]=new GL3RenderTarget(irr::core::dimension2du(m_rtts->getWidth(), m_rtts->getHeight()),buffer,this);
+            views_tx_objects[nbviews*(cam)+i]=new GL3RenderTarget(irr::core::dimension2du(m_rtts->getWidth(), m_rtts->getHeight()),buffer,this);
           }
-    //    GL3RenderTarget * renderTarget = createRenderTarget(irr::core::dimension2du(m_rtts->getWidth(), m_rtts->getHeight(),buffer);
-      //  renderTarget=views_tx_objects[2*(cam)+i];
         SP::sp_cur_player = cam;
         SP::sp_cur_buf_id[cam] = (SP::sp_cur_buf_id[cam] + 1) % 3;
         Camera * const camera = Camera::getCamera(cam);
@@ -790,21 +789,15 @@ void ShaderBasedRenderer::render(float dt)
 
 
         if (i==0) {
-        camnode->setShift(-0.125);}
-        else if (i==2){camnode->setShift(0.125);}
+        camnode->setShift(-0.08);}
+        else if (i==nbviews-1){camnode->setShift(0.08);}
         irr_driver->getSceneManager()->setActiveCamera(camnode);
         computeMatrixesAndCameras(camnode, m_rtts->getWidth(), m_rtts->getHeight());
 
         // Save projection-view matrix for the next frame
         camera->setPreviousPVMatrix(irr_driver->getProjViewMatrix());
 
-
-
-
-
-        views_tx_objects[3*(cam)+i]->renderToTexture(camnode,dt);
-
-
+        views_tx_objects[nbviews*(cam)+i]->renderToTexture(camnode,dt);
 
 /*
         std::ostringstream oss;
@@ -913,18 +906,29 @@ PROFILER_POP_CPU_MARKER();}*/
     MultiViewShader::getInstance()->use();
 
     glBindVertexArray(SharedGPUObjects::getUI_VAO());
+    GLuint txc_id0,txc_id1,txc_id2,txc_id3,txc_id4,txc_id5;
+
+    if (UserConfigParams::m_nb_views==2) {
+
+    txc_id0 = views_tx_objects[0]->getTexture();
+    txc_id1 = 0;
+    txc_id2 = views_tx_objects[1]->getTexture();
+    txc_id3 = views_tx_objects[2]->getTexture();
+    txc_id4 = 0;
+    txc_id5 = views_tx_objects[3]->getTexture();
+    }
+    else if (UserConfigParams::m_nb_views==3) {
+    txc_id0 = views_tx_objects[0]->getTexture();
+    txc_id1 = views_tx_objects[1]->getTexture();
+    txc_id2 = views_tx_objects[2]->getTexture();
+    txc_id3 = views_tx_objects[3]->getTexture();
+    txc_id4 = views_tx_objects[4]->getTexture();
+    txc_id5 = views_tx_objects[5]->getTexture();
 
 
-  //  GLuint texture_cam_id = renderTarget->getTexture();
+    }
+    MultiViewShader::getInstance()->setTextureUnits(txc_id0,txc_id1,txc_id2,txc_id3,txc_id4,txc_id5);
 
-    GLuint txc_id1 = views_tx_objects[0]->getTexture();
-    GLuint txc_id2 = views_tx_objects[1]->getTexture();
-    GLuint txc_id3 = views_tx_objects[2]->getTexture();
-    GLuint txc_id4 = views_tx_objects[3]->getTexture();
-    GLuint txc_id5 = views_tx_objects[4]->getTexture();
-    GLuint txc_id6 = views_tx_objects[5]->getTexture();
-
- MultiViewShader::getInstance()->setTextureUnits(txc_id1,txc_id2,txc_id3,txc_id4);
 
   /*
    MultiViewShader::getInstance()->setUniforms(...
