@@ -14,7 +14,6 @@ uniform float height;
 in vec2 uv;
 out vec4 FragColor;
 
-
 void main()
 {
 	vec2 tx_coord;
@@ -37,12 +36,12 @@ void main()
 
 //definition des composantes RGB
 
-	int view_r = (3*x+y);
+	int view_r = (3*x+ moduloy);
 	int mod_r = view_r/8;
 	mod_r = view_r - mod_r*8;
+	//if(mod_r<0) mod_r+=8;
 
-
-/*if (nbviews == 3){
+if (nbviews == 3) {
 //choix des vues pour chaque pixel
 	if (mod_r == 0) {
 		col2 = texture2D(texture_j1g, tx_coord);
@@ -104,9 +103,8 @@ void main()
 		res.g = col8.g;
 	}
 
-}*/
+} else if (nbviews==2) {
 
-//	else if (nbviews==2){
 	//choix des vues pour chaque pixel
 	if (mod_r == 0) {
 		col2 = texture2D(texture_j1g, tx_coord);
@@ -115,10 +113,10 @@ void main()
 
 	if (mod_r == 1){
 		col2 = texture2D(texture_j1g, tx_coord);
-		//col3 = texture2D(texture_j1d, tx_coord);
+		col3 = texture2D(texture_j1d, tx_coord);
 
 		res.g = col2.g;
-		//res.b = col3.b;
+		res.b = col3.b;
 	}
 
 	if(mod_r == 2){
@@ -158,7 +156,8 @@ void main()
 		res.r = col7.r;
 }
 
-//}
+
+}
 
 
 	FragColor = res;

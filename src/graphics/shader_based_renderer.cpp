@@ -766,17 +766,24 @@ void ShaderBasedRenderer::render(float dt)
 
 
     ///LA BOUCLE !!! THE ONE !!!!!
-    int nbviews=UserConfigParams::m_nb_views;
+    int nbviews = UserConfigParams::m_nb_views;
+    if (nbviews > 1) {
+    	    
+	  	 int scaler=2;
+    	unsigned int w = m_rtts->getWidth();
+    	unsigned int h = m_rtts->getHeight();
+    	irr::core::dimension2du tx_dim(w/scaler, h/scaler);
+    	
     for(unsigned int cam = 0; cam < Camera::getNumCameras(); cam++)
     {
+    	
       int i;
       for (i=0; i < nbviews;i++) {
-
         char buffer[100];
         sprintf(buffer,"target%d",cam*nbviews+i);
         if (!views_tx_objects[nbviews*(cam)+i])
           {
-            views_tx_objects[nbviews*(cam)+i]=new GL3RenderTarget(irr::core::dimension2du(m_rtts->getWidth(), m_rtts->getHeight()),buffer,this);
+            views_tx_objects[nbviews*(cam)+i]=new GL3RenderTarget(tx_dim,buffer,this);
           }
         SP::sp_cur_player = cam;
         SP::sp_cur_buf_id[cam] = (SP::sp_cur_buf_id[cam] + 1) % 3;
@@ -789,53 +796,63 @@ void ShaderBasedRenderer::render(float dt)
 
 
         if (i==0) {
-        camnode->setShift(-0.08);}
-        else if (i==nbviews-1){camnode->setShift(0.08);}
+        	camnode->setShift(-0.02);
+        }
+        else if (i==nbviews-1){
+        		camnode->setShift(0.02);
+        }
+        
         irr_driver->getSceneManager()->setActiveCamera(camnode);
-        computeMatrixesAndCameras(camnode, m_rtts->getWidth(), m_rtts->getHeight());
+        computeMatrixesAndCameras(camnode, m_rtts->getWidth()/scaler, m_rtts->getHeight()/scaler);
 
         // Save projection-view matrix for the next frame
         camera->setPreviousPVMatrix(irr_driver->getProjViewMatrix());
 
         views_tx_objects[nbviews*(cam)+i]->renderToTexture(camnode,dt);
-
-/*
-        std::ostringstream oss;
-        oss << "drawAll() for kart " << cam;
-        PROFILER_PUSH_CPU_MARKER(oss.str().c_str(), (cam+1)*60,
-                                 0x00, 0x00);
-        camera->activate(!CVS->isDeferredEnabled());
-        rg->preRenderCallback(camera);   // adjusts start referee
-        irr_driver->getSceneManager()->setActiveCamera(camnode);
-
-        computeMatrixesAndCameras(camnode, m_rtts->getWidth(), m_rtts->getHeight());
-        if (CVS->isDeferredEnabled())
+      }//end multiview loop
+    }//end camera loop
+    
+    } else {
+    	
+        for(unsigned int cam = 0; cam < Camera::getNumCameras(); cam++)
         {
-            renderSceneDeferred(camnode, dt, track->hasShadows(), false);
-        }
-        else
-        {
-            renderScene(camnode, dt, track->hasShadows(), false);
-        }
+          std::ostringstream oss;
+          oss << "drawAll() for kart " << cam;
+          PROFILER_PUSH_CPU_MARKER(oss.str().c_str(), (cam+1)*60,
+                                   0x00, 0x00);
+          Camera * const camera = Camera::getCamera(cam);
+          scene::ICameraSceneNode * camnode = camera->getCameraSceneNode();
 
-        if (irr_driver->getBoundingBoxesViz())
-        {
-            glEnable(GL_DEPTH_TEST);
-            glDepthMask(GL_TRUE);
-            SP::drawBoundingBoxes();
-            m_draw_calls.renderBoundingBoxes();
-        }
+          camera->activate(!CVS->isDeferredEnabled());
+          rg->preRenderCallback(camera);   // adjusts start referee
+          irr_driver->getSceneManager()->setActiveCamera(camnode);
 
-        debugPhysics();
+          computeMatrixesAndCameras(camnode, m_rtts->getWidth(), m_rtts->getHeight());
+          if (CVS->isDeferredEnabled())
+          {
+              renderSceneDeferred(camnode, dt, track->hasShadows(), false);
+          }
+          else
+          {
+              renderScene(camnode, dt, track->hasShadows(), false);
+          }
 
-        if (CVS->isDeferredEnabled())
-        {
-            renderPostProcessing(camera, cam == 0);//cam == 1 affiche que la vue du joueur 2
+          if (irr_driver->getBoundingBoxesViz())
+          {
+              glEnable(GL_DEPTH_TEST);
+              glDepthMask(GL_TRUE);
+              SP::drawBoundingBoxes();
+              m_draw_calls.renderBoundingBoxes();
+          }
+
+          debugPhysics();
+
+          if (CVS->isDeferredEnabled())
+          {
+              renderPostProcessing(camera, cam == 0);//cam == 1 affiche que la vue du joueur 2
+          }
         }
-*/
-}
-      }
-  //}
+    }
       // for i<world->getNumKarts()
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -904,8 +921,11 @@ PROFILER_POP_CPU_MARKER();}*/
 
 
     MultiViewShader::getInstance()->use();
+    MultiViewShader::getInstance()->setUniforms(UserConfigParams::m_nb_views);
 
     glBindVertexArray(SharedGPUObjects::getUI_VAO());
+    
+    
     GLuint txc_id0,txc_id1,txc_id2,txc_id3,txc_id4,txc_id5;
 
     if (UserConfigParams::m_nb_views==2) {
@@ -930,17 +950,10 @@ PROFILER_POP_CPU_MARKER();}*/
     MultiViewShader::getInstance()->setTextureUnits(txc_id0,txc_id1,txc_id2,txc_id3,txc_id4,txc_id5);
 
 
-  /*
-   MultiViewShader::getInstance()->setUniforms(...
-                    core::vector2df(center_pos_x, center_pos_y),
-                    core::vector2df(width, height),
-                    core::vector2df(tex_center_pos_x, tex_center_pos_y),
-                    core::vector2df(tex_width, tex_height) );
- */
-
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
     } //end if
 
 
